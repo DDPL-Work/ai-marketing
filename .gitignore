@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .env
+
+ai-marketing-workflow.html
+API-README.md
