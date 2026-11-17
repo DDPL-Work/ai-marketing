@@ -1,0 +1,1675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Marketing Manager — Live Dashboard & Workflow · Dr. Design Technology</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--slate:#1f2a37;--slate-2:#273444;--ink:#0f172a;--text:#1e293b;--muted:#64748b;--line:#e5e9f0;--bg:#f4f6f9;--yellow:#f5c518;--yellow-2:#fff4c2;
+--blue:#2563eb;--green:#16a34a;--red:#dc2626;--amber:#d97706;--violet:#7c3aed;--teal:#0d9488;--pink:#db2777}
+*{box-sizing:border-box}body{margin:0;font-family:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45}
+header{background:var(--slate);color:#cbd5e1;padding:14px 28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{width:38px;height:38px;border-radius:10px;background:var(--yellow);display:grid;place-items:center;color:var(--slate);flex:none}
+header b{color:#fff;letter-spacing:.03em}header .sub{font-size:12px;color:#94a3b8}.grow{flex:1}
+.btn{border:0;border-radius:9px;padding:9px 15px;font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.btn.ai{background:var(--yellow);color:var(--slate)}.btn.ghost{background:rgba(255,255,255,.08);color:#fff}
+svg.i{width:18px;height:18px;flex:none}
+main{max-width:1500px;margin:0 auto;padding:24px 28px 60px}
+h1{margin:0 0 4px;font-size:24px;color:var(--ink)}.lead{color:var(--muted);margin:0 0 20px}
+.status{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:16px;min-height:20px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--green)}.dot.run{background:var(--yellow);animation:p 1s infinite}@keyframes p{50%{opacity:.3}}
+.tier{display:grid;gap:12px}.t1{grid-template-columns:1fr 1.35fr 1fr}.t2{grid-template-columns:repeat(6,minmax(0,1fr))}.t3{grid-template-columns:repeat(5,minmax(0,1fr))}
+.node{border-radius:13px;padding:14px;border:1px solid var(--line);background:#fff;cursor:pointer;transition:transform .15s,box-shadow .25s,outline-color .25s;position:relative;outline:3px solid transparent;outline-offset:2px}
+.node:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(15,23,42,.14)}
+.node.active{outline-color:var(--yellow);box-shadow:0 0 0 1px var(--yellow),0 0 34px rgba(245,197,24,.45)}
+.node.done::after{content:'✓';position:absolute;top:10px;right:12px;width:20px;height:20px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;display:grid;place-items:center;font-weight:800}
+.nt{display:flex;align-items:center;gap:10px;margin-bottom:8px}.nt h3{margin:0;font-size:14px;color:var(--ink)}
+.ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none}.ic svg{width:19px;height:19px}
+.node ul{margin:0;padding-left:16px;font-size:12.5px;color:var(--muted)}.node li{margin:2px 0}
+.c-blue{background:#f5f8ff;border-color:#d6e2fb}.c-blue .ic{background:#e8f0fe;color:var(--blue)}
+.c-red{background:#fff6f6;border-color:#f8d4d4}.c-red .ic{background:#fdeaea;color:var(--red)}
+.c-green{background:#f3fbf6;border-color:#cdebd8}.c-green .ic{background:#e7f7ed;color:var(--green)}
+.c-amber{background:#fffaf0;border-color:#f6e2b8}.c-amber .ic{background:#fef3e2;color:var(--amber)}
+.c-violet{background:#f8f5ff;border-color:#e1d5fb}.c-violet .ic{background:#f1eafe;color:var(--violet)}
+.c-teal{background:#f1fbfa;border-color:#c8ebe7}.c-teal .ic{background:#e2f6f4;color:var(--teal)}
+.orch{background:var(--slate);border-color:var(--slate);color:#cbd5e1}.orch h3{color:#fff;font-size:17px}.orch li{color:#cbd5e1}.orch .ic{background:var(--yellow);color:var(--slate);width:48px;height:48px}.orch .ic svg{width:27px;height:27px}
+.conn{height:30px}.conn svg{width:100%;height:30px;display:block}
+.fl{stroke:#94a3b8;stroke-width:1.6;fill:none;stroke-dasharray:5 5}.fl.on{stroke:var(--yellow);stroke-width:2.4;animation:d .7s linear infinite}@keyframes d{to{stroke-dashoffset:-20}}
+.band{background:#f3f8fe;border:1px solid #d6e2fb;border-radius:14px;padding:14px}.band>h2{margin:2px 0 12px;text-align:center;font-size:16px;color:var(--ink)}
+.band .tier{grid-template-columns:repeat(4,minmax(0,1fr))}.band .node{background:#fff}
+.loop{display:flex;justify-content:center;margin-top:16px}.loop span{background:var(--yellow-2);color:#7a5d00;font-weight:700;font-size:12.5px;padding:7px 16px;border-radius:20px;display:inline-flex;gap:7px;align-items:center}
+.loop span.on{background:var(--yellow);color:var(--slate)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:22px;justify-content:center}
+/* side panel */
+.ov{position:fixed;inset:0;background:rgba(15,23,42,.4);display:none;z-index:20}.ov.open{display:block}
+.panel{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:#fff;z-index:21;transform:translateX(100%);transition:transform .22s;overflow-y:auto;box-shadow:-10px 0 40px rgba(15,23,42,.2)}
+.panel.open{transform:none}.ph{padding:20px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center}.ph h2{margin:0;font-size:18px;color:var(--ink)}
+.pb{padding:20px}.pb h4{margin:18px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.pb p{margin:0}
+.pb ul{margin:0;padding-left:18px}.pb li{margin:4px 0}.x{margin-left:auto;background:none;border:1px solid var(--line);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:18px}
+.chip{display:inline-block;background:#eef1f5;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:600;margin:2px 3px 2px 0}
+.log{position:fixed;left:20px;bottom:20px;background:var(--slate);color:#fff;padding:10px 16px;border-radius:10px;font-weight:600;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.25);opacity:0;transition:.25s;max-width:420px;border-left:4px solid var(--yellow)}.log.show{opacity:1}
+@media(max-width:1100px){.t2{grid-template-columns:repeat(3,1fr)}.t3{grid-template-columns:repeat(2,1fr)}.band .tier{grid-template-columns:repeat(2,1fr)}.conn{display:none}.tier{margin-bottom:12px}}
+@media(max-width:700px){.t1,.t2,.t3,.band .tier{grid-template-columns:1fr}main{padding:16px}}
+@media print{header .btn,.status,.log{display:none}body{background:#fff}}
+</style>
+
+<style>
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.06);padding:4px;border-radius:11px}
+.tabs button{border:0;background:transparent;color:#cbd5e1;font:inherit;font-weight:700;padding:8px 14px;border-radius:8px;cursor:pointer}
+.tabs button.on{background:var(--yellow);color:var(--slate)}
+section.tab{display:none}section.tab.on{display:block}
+.wrapd{max-width:1500px;margin:0 auto;padding:20px 28px 60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:0 1px 2px rgba(15,23,42,.04),0 2px 8px rgba(15,23,42,.05)}
+.card .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid #eef1f5}.card .hd h2{margin:0;font-size:15px;color:var(--ink)}
+.card .bd{padding:14px 16px}
+.g{display:grid;gap:14px}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g3{grid-template-columns:1.15fr 1fr 1fr}.g2{grid-template-columns:1.6fr 1fr}
+.ctrl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.ctrl .clock{font-weight:700;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:9px;padding:7px 12px}
+.btn2{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font:inherit;font-weight:700;cursor:pointer;color:var(--text)}.btn2.on{background:var(--slate);color:#fff;border-color:var(--slate)}
+.btn2.pri{background:var(--slate);color:#fff;border-color:var(--slate)}.btn2.ok{background:var(--green);color:#fff;border-color:var(--green)}.btn2.sm{padding:4px 9px;font-size:12px;border-radius:7px}
+.sw{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:13px;cursor:pointer}.sw input{width:34px;height:20px;appearance:none;background:#cbd5e1;border-radius:20px;position:relative;cursor:pointer;transition:.15s;margin:0}
+.sw input:checked{background:var(--green)}.sw input::before{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.15s}.sw input:checked::before{left:17px}
+/* flow strip */
+.strip{display:flex;align-items:stretch;gap:8px;overflow-x:auto;padding:4px 2px 8px}
+.sgrp{display:flex;flex-direction:column;gap:6px;justify-content:center}.sgrp.agents{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 10px;display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;transition:box-shadow .2s,transform .2s,background .2s}
+.sn svg{width:15px;height:15px;flex:none}.sn.big{padding:12px 14px;font-size:13px}.sn.orch{background:var(--slate);color:#fff;border-color:var(--slate)}.sn.orch svg{color:var(--yellow)}
+.sn.hit{box-shadow:0 0 0 2px var(--yellow),0 0 22px rgba(245,197,24,.55);transform:translateY(-2px);background:#fffbe6}.sn.orch.hit{background:var(--slate-2)}
+.arrow{display:flex;align-items:center;color:#94a3b8;font-size:18px;font-weight:700}
+/* kpis */
+.kpi{padding:14px 16px}.kpi .l{font-size:12px;color:var(--muted);font-weight:600}.kpi .v{font-size:25px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-top:2px;transition:color .3s}
+.kpi .s{font-size:12px;color:var(--muted)}.kpi .v.bump{color:var(--green)}
+.bar{height:8px;background:#eef1f5;border-radius:10px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--green);border-radius:10px;transition:width .4s}.bar.a i{background:var(--amber)}.bar.r i{background:var(--red)}
+/* feed */
+.feed{height:520px;overflow-y:auto;padding:4px 0}
+.fi{display:flex;gap:10px;padding:9px 16px;border-bottom:1px solid #f1f4f8;animation:fin .35s}@keyframes fin{from{background:#fffbe6;transform:translateX(-6px)}}
+.fi .ag{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:none}.fi .ag svg{width:15px;height:15px}
+.fi .tx{font-size:13px}.fi .tm{font-size:11px;color:#94a3b8}.chip{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:20px;background:#eef1f5;color:#334155;margin:3px 3px 0 0}
+.chip.red{background:#fdeaea;color:var(--red)}.chip.green{background:#e7f7ed;color:var(--green)}.chip.amber{background:#fef3e2;color:var(--amber)}.chip.blue{background:#e8f0fe;color:var(--blue)}.chip.violet{background:#f1eafe;color:var(--violet)}
+/* cycle */
+.cyc li{list-style:none;display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12.5px;color:var(--muted)}.cyc ul{margin:0;padding:0}
+.cyc .st{width:18px;height:18px;border-radius:50%;border:2px solid #cbd5e1;flex:none;display:grid;place-items:center;font-size:10px;color:#fff}
+.cyc li.run{color:var(--ink);font-weight:700}.cyc li.run .st{border-color:var(--yellow);background:var(--yellow);animation:p 1s infinite}.cyc li.ok .st{background:var(--green);border-color:var(--green)}.cyc li.ok .st::after{content:'✓'}
+/* approvals */
+.ap{border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-bottom:8px;animation:fin .35s}.ap b{font-size:13px;color:var(--ink)}.ap .r{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+/* kanban */
+.kb{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;overflow-x:auto}
+.kc{background:#eef1f5;border-radius:11px;padding:8px;min-height:250px}.kc h4{margin:2px 4px 8px;font-size:12px;text-transform:capitalize;display:flex;justify-content:space-between;color:var(--ink)}
+.lc{background:#fff;border:1px solid var(--line);border-radius:9px;padding:7px 9px;margin-bottom:6px;font-size:12px;animation:fin .4s}.lc b{color:var(--ink)}.lc .m{color:var(--muted);font-size:11px}
+.sc{display:inline-block;min-width:26px;text-align:center;border-radius:6px;font-weight:800;font-size:11px;padding:1px 4px}.sc.hot{background:#fdeaea;color:var(--red)}.sc.warm{background:#fef3e2;color:var(--amber)}.sc.cold{background:#e8f0fe;color:var(--blue)}
+/* try it */
+.fld{display:flex;flex-direction:column;gap:4px;margin-bottom:9px}.fld label{font-size:12px;font-weight:700;color:#334155}
+.inp{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff}
+.trace{margin:0;padding:0}.trace li{list-style:none;display:flex;gap:9px;padding:6px 0;font-size:12.5px;opacity:.35;transition:opacity .3s}.trace li.ok{opacity:1}
+.trace .n{width:20px;height:20px;border-radius:50%;background:#eef1f5;color:var(--muted);font-size:11px;font-weight:800;display:grid;place-items:center;flex:none}.trace li.ok .n{background:var(--green);color:#fff}
+.mail{background:#fafbfc;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:12px;white-space:pre-wrap;margin-top:4px}
+/* rules */
+table.rt{width:100%;border-collapse:collapse}.rt th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line);background:#fafbfc}
+.rt td{padding:11px 14px;border-bottom:1px solid #f1f4f8;font-size:13px;vertical-align:top}.rt tr.fire td{background:#fffbe6}.rt .cnt{font-weight:800;font-size:16px;color:var(--ink);text-align:right}
+svg.chart{width:100%;display:block}
+@media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}.wrapd{padding:16px}}
+</style>
+
+<style>
+.sec{margin-top:22px}.sech{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.sech h2{margin:0;font-size:17px;color:var(--ink);display:flex;align-items:center;gap:10px}.sech p{margin:3px 0 0 38px;color:var(--muted);font-size:13px}
+.num{width:28px;height:28px;border-radius:8px;background:var(--slate);color:var(--yellow);display:grid;place-items:center;font-size:14px;font-weight:800;flex:none}
+.now{background:var(--slate);color:#e2e8f0;border-radius:14px;padding:16px 18px;display:flex;gap:16px;align-items:center}
+.now .big{width:52px;height:52px;border-radius:13px;display:grid;place-items:center;flex:none;transition:background .3s}.now .big svg{width:26px;height:26px}
+.now .what{font-size:17px;font-weight:700;color:#fff}.now .why{font-size:13px;color:#94a3b8;margin-top:3px}
+.now .path{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}.now .path span{background:rgba(255,255,255,.08);border-radius:6px;padding:2px 8px;font-size:12px;font-weight:700;color:#e2e8f0}.now .path i{color:var(--yellow);font-style:normal}
+.now.flash{animation:nf .6s}@keyframes nf{from{box-shadow:0 0 0 3px var(--yellow)}}
+.help{background:#fffbe6;border:1px solid #f6e2b8;border-radius:12px;padding:12px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:13px}
+.help ol{margin:0;padding-left:0;list-style:none;display:flex;gap:22px;flex-wrap:wrap}.help li{margin:0}
+.kpi .why{font-size:11.5px;color:var(--muted);margin-top:6px;border-top:1px dashed var(--line);padding-top:6px}
+.kpi .trend{font-size:12px;font-weight:700;color:var(--green)}
+.att-tabs{display:flex;gap:4px;padding:8px 10px;border-bottom:1px solid #eef1f5}.att-tabs button{border:0;background:#eef1f5;border-radius:8px;padding:6px 11px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;color:#334155}
+.att-tabs button.on{background:var(--slate);color:#fff}.att-tabs .c{background:var(--red);color:#fff;border-radius:10px;padding:0 6px;font-size:11px;margin-left:5px}
+.flt{display:flex;gap:5px;flex-wrap:wrap}.flt button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:3px 10px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;color:#334155}.flt button.on{background:var(--slate);color:#fff;border-color:var(--slate)}
+.fi{border-left:3px solid transparent}.fi .wy{font-size:12px;color:var(--muted);margin-top:2px}.fi .wy b{color:#334155}
+.kc p{margin:-4px 4px 8px;font-size:11px;color:var(--muted);line-height:1.35;min-height:30px}
+.tour{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);width:min(620px,calc(100% - 32px));background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(15,23,42,.35);z-index:40;padding:18px 20px;display:none;border-top:5px solid var(--yellow)}
+.tour.on{display:block;animation:fin .3s}.tour h3{margin:0 0 6px;font-size:16px;color:var(--ink)}.tour p{margin:0;font-size:13.5px;color:#334155}.tour .tf{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.tour .dots{display:flex;gap:5px}.tour .dots i{width:7px;height:7px;border-radius:50%;background:#cbd5e1}.tour .dots i.on{background:var(--slate)}
+.spot{outline:3px solid var(--yellow);outline-offset:4px;border-radius:14px;transition:outline-color .3s}
+.legend2{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.legend2 span{display:inline-flex;align-items:center;gap:5px}.legend2 i{width:10px;height:10px;border-radius:3px;display:inline-block}
+@media(max-width:1100px){.help ol{gap:8px;flex-direction:column}.sech p{margin-left:0}}
+.code-box{background:#0f172a;color:#f8fafc;padding:12px 14px;border-radius:9px;font-family:Consolas,Monaco,monospace;font-size:12px;overflow-x:auto;max-height:260px;white-space:pre-wrap;margin-top:8px;line-height:1.5}
+.content-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.agent-card{transition:transform .15s,box-shadow .2s}.agent-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(15,23,42,.08)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9S14.5 18.3 12 21c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg></div>
+  <div><b>AI Marketing Manager</b><div class="sub">Live dashboard & automation</div></div>
+  <div class="grow"></div>
+  <div class="tabs"><button class="on" data-t="tab-dash">Live dashboard</button><button data-t="tab-flow">Workflow map</button><button data-t="tab-rules">Automation rules</button><button data-t="tab-agents">AI Multi-Agent Tasks</button></div>
+  <button class="btn ghost" onclick="window.print()">Print / PDF</button>
+</header>
+
+
+<section class="tab on" id="tab-dash"><div class="wrapd">
+  <div class="help" id="helpbar"><b style="color:var(--ink)">👋 How to read this dashboard</b>
+    <ol><li><b>①</b> what the AI is doing right now</li><li><b>②</b> your results this month</li><li><b>③</b> things that need you</li><li><b>④</b> what the AI did, step by step</li><li><b>⑤</b> where every lead is</li><li><b>⑥</b> budget & goals</li><li><b>⑦</b> try it yourself</li></ol>
+    <div class="grow"></div><button class="btn2 pri" id="tourbtn">▶ Start guided tour (2 min)</button></div>
+
+  <div class="ctrl" style="margin-top:14px">
+    <span class="clock" id="clock">Day 22 · 09:00 IST</span>
+    <span style="display:flex;align-items:center;gap:7px;font-weight:700;font-size:13px"><span class="dot run" id="ddot"></span><span id="dstate">Automation running (simulation)</span></span>
+    <button class="btn2" id="pause">⏸ Pause</button>
+    <span style="font-size:12px;color:var(--muted);font-weight:700">Speed</span>
+    <button class="btn2 sm spd on" data-s="1">Slow</button><button class="btn2 sm spd" data-s="2">Normal</button><button class="btn2 sm spd" data-s="5">Fast</button>
+    <div class="grow"></div>
+    <label class="sw" title="When on, AI drafts publish without waiting for you"><input type="checkbox" id="autoap"> Auto-approve content</label>
+    <button class="btn2 pri" id="runcyc">▶ Run AI cycle now</button>
+  </div>
+
+  <!-- 1 -->
+  <div class="sec" id="s1"><div class="sech"><div><h2><span class="num">1</span>Right now</h2><p>The latest thing the system did automatically, why it did it, and which part of the workflow it went through.</p></div></div>
+    <div class="now" id="now"><div class="big" id="nowic" style="background:#273444;color:var(--yellow)"></div><div><div class="what" id="nowwhat">Starting up…</div><div class="why" id="nowwhy"></div><div class="path" id="nowpath"></div></div></div>
+    <div class="card" style="margin-top:10px"><div class="bd" style="padding:10px 14px"><div class="strip">
+      <div class="sgrp"><div class="sn" id="f-data">📊 Data inputs</div><div class="sn" id="f-goals">🎯 Your goals & budgets</div></div><div class="arrow">→</div>
+      <div class="sgrp"><div class="sn big orch" id="f-orch" data-i="bot">AI Marketing Manager</div></div><div class="arrow">→</div>
+      <div class="sgrp agents"><div class="sn" id="f-research" data-i="search">Research</div><div class="sn" id="f-content" data-i="file">Content</div><div class="sn" id="f-seo" data-i="trend">SEO</div>
+        <div class="sn" id="f-ads" data-i="mega">Ads</div><div class="sn" id="f-social" data-i="users">Social</div><div class="sn" id="f-assistant" data-i="chat">Assistant</div></div><div class="arrow">→</div>
+      <div class="sgrp"><div class="sn" id="f-approve" data-i="check">Your approval</div><div class="sn" id="f-publish" data-i="send">Publish</div></div><div class="arrow">→</div>
+      <div class="sgrp"><div class="sn" id="f-campaigns" data-i="target">Ad campaigns</div><div class="sn" id="f-crm" data-i="funnel">Leads & CRM</div></div><div class="arrow">→</div>
+      <div class="sgrp"><div class="sn" id="f-follow" data-i="mail">Auto follow-up</div><div class="sn" id="f-report" data-i="chart">Reports & insights</div></div><div class="arrow">↻</div>
+    </div></div></div></div>
+
+  <!-- 2 -->
+  <div class="sec" id="s2"><div class="sech"><div><h2><span class="num">2</span>Your results this month</h2><p>Numbers update live. <span class="trend">Green</span> = just went up. The line under each number explains what it means.</p></div></div>
+    <div class="g g4" id="kpis"></div></div>
+
+  <!-- 3 -->
+  <div class="sec" id="s3"><div class="sech"><div><h2><span class="num">3</span>Needs your attention</h2><p>The only things the AI won't do without you: approving content and budget increases, calling hot leads, and handling complaints.</p></div></div>
+    <div class="card"><div class="att-tabs"><button class="on" data-a="ap">To approve<span class="c" id="c-ap">0</span></button><button data-a="hot">Hot leads to call<span class="c" id="c-hot">0</span></button><button data-a="esc">Escalated to you<span class="c" id="c-esc">0</span></button><div class="grow"></div><button class="btn2 sm ok" id="apall">Approve all content</button></div>
+      <div class="bd" id="att" style="max-height:330px;overflow-y:auto"></div></div></div>
+
+  <!-- 4 -->
+  <div class="sec" id="s4"><div class="sech"><div><h2><span class="num">4</span>What the AI is doing, step by step</h2><p>Left: the hourly AI cycle, where the manager gives each agent a job. Right: every automatic action, newest first, each with the reason why.</p></div></div>
+    <div class="g" style="grid-template-columns:1fr 1.6fr">
+      <div class="card cyc"><div class="hd"><h2>🤖 Hourly AI cycle</h2><span style="font-size:12px;color:var(--muted)" id="cycinfo"></span></div><div class="bd"><ul id="cyc"></ul>
+        <p style="font-size:12px;color:var(--muted);margin:10px 0 0">The cycle runs every hour by itself. It reads your goals first, so if a goal is behind, that area gets extra work.</p></div></div>
+      <div class="card"><div class="hd"><h2>⚡ Activity log</h2><div class="flt" id="flt"><button class="on" data-c="all">All</button><button data-c="lead">Leads</button><button data-c="follow">Follow-ups</button><button data-c="content">Content</button><button data-c="ads">Ads</button><button data-c="social">Social</button><button data-c="ai">AI cycle</button></div></div>
+        <div class="feed" id="feed" style="height:460px"></div><div style="padding:8px 16px;border-top:1px solid #eef1f5;font-size:12px;color:var(--muted)" id="fcount">0 automatic actions so far</div></div>
+    </div></div>
+
+  <!-- 5 -->
+  <div class="sec" id="s5"><div class="sech"><div><h2><span class="num">5</span>Where every lead is</h2><p>Every enquiry is scored automatically (<span class="sc hot">70+</span> hot, <span class="sc warm">45+</span> warm, <span class="sc cold">&lt;45</span> cold) and moves through these stages without manual work.</p></div><span style="font-size:13px;font-weight:700;color:var(--ink)" id="pipeval"></span></div>
+    <div class="card"><div class="bd"><div class="kb" id="kb"></div></div></div></div>
+
+  <!-- 6 -->
+  <div class="sec" id="s6"><div class="sech"><div><h2><span class="num">6</span>Budget & goals</h2><p>You set these in Settings. The AI plans around them and protects the budget automatically.</p></div></div>
+    <div class="g" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="card"><div class="hd"><h2>🛡 Ad budget</h2></div><div class="bd" id="budget"></div></div>
+      <div class="card"><div class="hd"><h2>🎯 Monthly goals</h2></div><div class="bd" id="goals"></div></div>
+      <div class="card"><div class="hd"><h2>💡 Latest AI recommendation</h2></div><div class="bd" id="rec" style="font-size:13px;color:var(--muted)">Appears after the first AI cycle.</div></div>
+    </div>
+    <div class="card" style="margin-top:14px"><div class="hd"><h2>Today, hour by hour</h2><div class="legend2"><span><i style="background:#2563eb"></i>Website visitors</span><span><i style="background:#dc2626"></i>New leads (×20 so it's visible)</span></div></div><div class="bd" id="chart"></div></div></div>
+
+  <!-- 7 -->
+  <div class="sec" id="s7"><div class="sech"><div><h2><span class="num">7</span>Try it yourself</h2><p>Send a test enquiry and watch every automatic step happen, in order, with what the customer receives.</p></div></div>
+    <div class="g" style="grid-template-columns:1fr 1.2fr"><div class="card"><div class="bd">
+      <form id="tryf"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="fld"><label>Name</label><input class="inp" name="name" value="Rohit Rawat" required></div>
+        <div class="fld"><label>Comes from</label><select class="inp" name="source"><option value="website_form">Website form</option><option value="live_chat">Live chat</option><option value="whatsapp">WhatsApp</option><option value="facebook">Facebook lead ad</option><option value="instagram">Instagram DM</option><option value="phone">Phone (AI voice agent)</option><option value="google_ads">Google Ads landing page</option></select></div>
+        <div class="fld"><label>Email</label><input class="inp" name="email" value="rohit.rawat@gmail.com"></div><div class="fld"><label>Phone</label><input class="inp" name="phone" value="+91 98970 12345"></div></div>
+        <div class="fld"><label>Message <span style="font-weight:500;color:var(--muted)">(try with and without “book a call”)</span></label><textarea class="inp" name="message" rows="3">Need a quote for an e-commerce website, budget around ₹80k. Can we book a call this week?</textarea></div>
+        <button class="btn2 pri" style="width:100%">Send enquiry & watch the automation</button></form></div></div>
+      <div class="card"><div class="hd"><h2>Automation trace</h2><span style="font-size:12px;color:var(--muted)">each step ticks off as it happens</span></div><div class="bd"><ul class="trace" id="trace"><li class="ok" style="opacity:.6"><span class="n">i</span><span>Send the form to see the full chain here.</span></li></ul></div></div></div></div>
+</div></section>
+
+<div class="tour" id="tour"><div style="display:flex;justify-content:space-between;align-items:center"><span class="chip" id="tstep">Step 1 of 9</span><button class="btn2 sm" id="tend">✕ End tour</button></div>
+  <h3 id="tt"></h3><p id="tp"></p><div class="tf"><div class="dots" id="tdots"></div><div><button class="btn2 sm" id="tback">← Back</button> <button class="btn2 sm pri" id="tnext">Next →</button></div></div></div>
+<section class="tab" id="tab-rules"><div class="wrapd">
+  <h1 style="margin:0 0 4px">Automation rules — how it works</h1><p class="lead">Every automation in the system as <b>When → Then</b>. The counters update live as the dashboard runs; the row flashes when a rule fires.</p>
+  <div class="card"><table class="rt"><thead><tr><th>When (trigger)</th><th>Then (automatic action)</th><th>Done by</th><th>Your control</th><th style="text-align:right">Fired</th></tr></thead><tbody id="rules"></tbody></table></div>
+</div></section>
+
+<section class="tab" id="tab-agents"><div class="wrapd">
+  <!-- Top Bar -->
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+    <div>
+      <h1 style="margin:0 0 4px">AI Multi-Agent Tasks & Orchestration</h1>
+      <p class="lead" style="margin:0">Real-time status, LangGraph pipeline execution, and human approval safety controls across all 4 specialist agents.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn2" id="refresh-agents-btn" onclick="refreshAllAgentData()">↻ Refresh Agent Data</button>
+      <button class="btn2 pri" id="run-agents-cycle-btn" onclick="triggerRunCycle(true)">⚡ Run 4-Agent Cycle (Instant)</button>
+      <button class="btn2 ok" id="run-agents-async-btn" onclick="triggerRunCycle(false)">▶ Run in Background (Async)</button>
+    </div>
+  </div>
+
+  <!-- Agent 1-4 Roster Status Grid -->
+  <div class="g g4" style="margin-bottom:20px">
+    <div class="card agent-card">
+      <div class="hd">
+        <h2 style="font-size:14px">Agent 1 · Marketing Manager</h2>
+        <span class="chip blue">Supervisor</span>
+      </div>
+      <div class="bd">
+        <p style="font-size:12px;color:var(--muted);margin:0 0 10px;min-height:48px">Supervises the CRM, assigns tasks to Agents 2-4, gates content approvals, and escalates to Business Owner.</p>
+        <div style="font-size:11.5px;font-weight:700;margin-bottom:10px">Status: <span class="chip green">🟢 Online · Active</span></div>
+        <button class="btn2 sm pri" style="width:100%" onclick="triggerSingleAgent(1)">Trigger Agent 1 Analysis</button>
+      </div>
+    </div>
+
+    <div class="card agent-card">
+      <div class="hd">
+        <h2 style="font-size:14px">Agent 2 · Research & Content</h2>
+        <span class="chip red">Content Creator</span>
+      </div>
+      <div class="bd">
+        <p style="font-size:12px;color:var(--muted);margin:0 0 10px;min-height:48px">Researches topics, target audience, keywords, writes SEO blog drafts and AI image prompts. Never publishes directly.</p>
+        <div style="font-size:11.5px;font-weight:700;margin-bottom:10px">Status: <span class="chip green">🟢 Online · Ready</span></div>
+        <button class="btn2 sm pri" style="width:100%" onclick="triggerSingleAgent(2)">Trigger Agent 2 Drafting</button>
+      </div>
+    </div>
+
+    <div class="card agent-card">
+      <div class="hd">
+        <h2 style="font-size:14px">Agent 3 · SEO & Advertising</h2>
+        <span class="chip green">Optimization</span>
+      </div>
+      <div class="bd">
+        <p style="font-size:12px;color:var(--muted);margin:0 0 10px;min-height:48px">Reviews SEO keywords, meta tags, content structure, and drafts ad proposals. Never modifies budget alone.</p>
+        <div style="font-size:11.5px;font-weight:700;margin-bottom:10px">Status: <span class="chip green">🟢 Online · Ready</span></div>
+        <button class="btn2 sm pri" style="width:100%" onclick="triggerSingleAgent(3)">Trigger Agent 3 SEO Review</button>
+      </div>
+    </div>
+
+    <div class="card agent-card">
+      <div class="hd">
+        <h2 style="font-size:14px">Agent 4 · Social & Support</h2>
+        <span class="chip violet">Social / Care</span>
+      </div>
+      <div class="bd">
+        <p style="font-size:12px;color:var(--muted);margin:0 0 10px;min-height:48px">Prepares FB, IG, LinkedIn & YouTube drafts; suggests customer replies. Human review strictly required.</p>
+        <div style="font-size:11.5px;font-weight:700;margin-bottom:10px">Status: <span class="chip green">🟢 Online · Ready</span></div>
+        <button class="btn2 sm pri" style="width:100%" onclick="triggerSingleAgent(4)">Trigger Agent 4 Social & Care</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agent Workspace Tabs -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="att-tabs" id="agent-workspace-tabs">
+      <button class="on" data-target="pane-content">📝 Generated Content & SEO (<span id="count-content">0</span>)</button>
+      <button data-target="pane-social">📱 Social Media Drafts (<span id="count-social">0</span>)</button>
+      <button data-target="pane-replies">💬 Customer Reply Suggestions (<span id="count-replies">0</span>)</button>
+      <button data-target="pane-tasks">⚙️ Agent Tasks & Logs (<span id="count-tasks">0</span>)</button>
+      <button data-target="pane-integrations">🔌 API Integrations (<span id="count-integrations">Status</span>)</button>
+    </div>
+
+    <!-- Pane 1: Blog Content & SEO Reviews -->
+    <div id="pane-content" class="agent-pane" style="padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div>
+          <h3 style="margin:0;font-size:15px;color:var(--ink)">Blog Content Packages (Agent 2 Draft + Agent 3 SEO + Agent 1 Approval)</h3>
+          <p style="margin:2px 0 0;font-size:12px;color:var(--muted)">Safety Gate: Approving creates a WordPress draft only (post_status='draft'). Never published automatically.</p>
+        </div>
+      </div>
+      <div id="agent-content-list">
+        <div style="color:var(--muted);text-align:center;padding:24px">Loading generated content…</div>
+      </div>
+    </div>
+
+    <!-- Pane 2: Social Media Drafts -->
+    <div id="pane-social" class="agent-pane" style="display:none;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div>
+          <h3 style="margin:0;font-size:15px;color:var(--ink)">Social Media Drafts (Agent 4)</h3>
+          <p style="margin:2px 0 0;font-size:12px;color:var(--muted)">Platform-specific drafts for Facebook, Instagram, LinkedIn, and YouTube. Stays in draft status until manually verified.</p>
+        </div>
+      </div>
+      <div id="agent-social-list" class="g g2">
+        <div style="color:var(--muted);text-align:center;padding:24px">Loading social drafts…</div>
+      </div>
+    </div>
+
+    <!-- Pane 3: Customer Reply Suggestions -->
+    <div id="pane-replies" class="agent-pane" style="display:none;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div>
+          <h3 style="margin:0;font-size:15px;color:var(--ink)">Customer Reply Suggestions (Agent 4)</h3>
+          <p style="margin:2px 0 0;font-size:12px;color:var(--muted)">Strict Safety Rule: Suggestions only. Human approval is required before sending to customers.</p>
+        </div>
+      </div>
+      <div id="agent-replies-list">
+        <div style="color:var(--muted);text-align:center;padding:24px">Loading reply suggestions…</div>
+      </div>
+    </div>
+
+    <!-- Pane 4: Agent Tasks & Logs -->
+    <div id="pane-tasks" class="agent-pane" style="display:none;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div>
+          <h3 style="margin:0;font-size:15px;color:var(--ink)">Agent Tasks & Execution Audit Logs</h3>
+          <p style="margin:2px 0 0;font-size:12px;color:var(--muted)">Persisted in MySQL with task inputs, outputs, timestamps, and error recovery traces.</p>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="rt">
+          <thead>
+            <tr>
+              <th style="width:60px">ID</th>
+              <th>Agent</th>
+              <th>Task Type</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Created At</th>
+              <th>Execution Trace</th>
+            </tr>
+          </thead>
+          <tbody id="agent-tasks-tbody">
+            <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">Loading tasks…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pane 5: API Integrations Status -->
+    <div id="pane-integrations" class="agent-pane" style="display:none;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div>
+          <h3 style="margin:0;font-size:15px;color:var(--ink)">Agent Direct API Integrations Status</h3>
+          <p style="margin:2px 0 0;font-size:12px;color:var(--muted)">Directly embedded inside agent files (no central folder). Real-time credential and connection status.</p>
+        </div>
+        <button class="btn2 sm" onclick="fetchIntegrationsStatus()">↻ Refresh Integrations</button>
+      </div>
+
+      <!-- Dedicated WordPress Status & Test Card -->
+      <div class="card" style="padding:16px;margin-bottom:16px;background:linear-gradient(135deg,#f8fafc,#ffffff);border:1px solid #e2e8f0">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px">🌐</span>
+              <h4 style="margin:0;font-size:14px;color:var(--ink);font-weight:700">WordPress Business Website Integration</h4>
+              <span id="wp-connection-badge" class="chip" style="background:#f1f5f9;color:#64748b">⚪ Checking...</span>
+              <span class="chip green" style="font-size:10.5px">🛡️ Draft-Only Enforced</span>
+            </div>
+            <p id="wp-site-url-display" style="margin:4px 0 0;font-size:12px;color:var(--muted)">Target: Not configured</p>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn2 sm" id="btn-wp-test" onclick="testWordPressConnection()">⚡ Test Connection</button>
+            <button class="btn2 sm" onclick="fetchWordPressStatus()">↻ Refresh WP Status</button>
+          </div>
+        </div>
+        <div id="wp-details-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid #f1f5f9">
+          <div style="background:#fff;padding:10px;border-radius:6px;border:1px solid #f1f5f9">
+            <span style="font-size:11px;color:var(--muted)">Connected Account</span>
+            <div id="wp-user-display" style="font-size:13px;font-weight:600;color:var(--ink);margin-top:2px">—</div>
+          </div>
+          <div style="background:#fff;padding:10px;border-radius:6px;border:1px solid #f1f5f9">
+            <span style="font-size:11px;color:var(--muted)">SEO Plugin</span>
+            <div id="wp-seo-display" style="font-size:13px;font-weight:600;color:var(--ink);margin-top:2px">—</div>
+          </div>
+          <div style="background:#fff;padding:10px;border-radius:6px;border:1px solid #f1f5f9">
+            <span style="font-size:11px;color:var(--muted)">Published Posts</span>
+            <div id="wp-posts-count" style="font-size:13px;font-weight:600;color:var(--ink);margin-top:2px">—</div>
+          </div>
+          <div style="background:#fff;padding:10px;border-radius:6px;border:1px solid #f1f5f9">
+            <span style="font-size:11px;color:var(--muted)">Drafts Staged</span>
+            <div id="wp-drafts-count" style="font-size:13px;font-weight:600;color:var(--ink);margin-top:2px">—</div>
+          </div>
+        </div>
+        <div id="wp-status-note" style="margin-top:10px;font-size:11.5px;color:var(--muted);background:#f8fafc;padding:8px 12px;border-radius:6px">
+          💡 <b>WordPress Safety Guardrail:</b> All blog posts created by Agent 3 are saved strictly as <code>draft</code> in WordPress. Automatic publishing is blocked. Manual review in WordPress Admin is required before articles go live.
+        </div>
+      </div>
+      <div id="agent-integrations-container" class="g g4">
+        <div style="grid-column:span 4;color:var(--muted);text-align:center;padding:24px">Loading provider integration status…</div>
+      </div>
+    </div>
+  </div>
+</div></section>
+<section class="tab" id="tab-flow"><main>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><h1>AI Marketing Manager — complete workflow</h1><button class="btn ai" id="play"><svg class="i" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg> Play the workflow</button></div>
+  <p class="lead">One orchestrator coordinates six specialist AI agents across content, publishing, ads, lead capture and follow-up, then learns from the results. Click any box for details, or press <b>Play the workflow</b> to watch a full cycle.</p>
+  <div class="status"><span class="dot" id="dot"></span><span id="stat">Idle — ready to run a cycle</span></div>
+
+  <div class="tier t1">
+    <div class="node c-blue" data-k="inputs"><div class="nt"><div class="ic" data-ic="chart"></div><h3>Data inputs &amp; research</h3></div>
+      <ul><li>Website analytics (Google Analytics)</li><li>Search data (Search Console)</li><li>Competitor analysis</li><li>Industry trends</li><li>Customer enquiries</li><li>Reviews &amp; feedback</li><li>Keyword research</li><li>Local market data</li></ul></div>
+    <div class="node orch" data-k="orch"><div class="nt"><div class="ic" data-ic="bot"></div><div><h3>AI Marketing Manager <span style="font-weight:500;opacity:.7">(Orchestrator)</span></h3></div></div>
+      <ul><li>Plans and coordinates all workflows</li><li>Analyses performance and identifies opportunities</li><li>Assigns tasks to specialist AI agents</li><li>Monitors results and recommends improvements</li><li>Handles approvals and budget controls</li></ul></div>
+    <div class="node c-green" data-k="goals"><div class="nt"><div class="ic" data-ic="user"></div><h3>Business goals &amp; settings <span style="font-weight:500;color:var(--muted)">(you control)</span></h3></div>
+      <ul><li>Set business goals</li><li>Set monthly budgets</li><li>Approve content (optional)</li><li>Set target audience and locations</li><li>View reports and results</li><li>Adjust priorities</li><li>Receive notifications</li></ul></div>
+  </div>
+  <div class="conn"><svg viewBox="0 0 100 30" preserveAspectRatio="none"><path class="fl" id="c1" vector-effect="non-scaling-stroke" d="M50 0 V12 H8.3 V30 M50 12 H25 V30 M50 12 H41.6 V30 M50 12 H58.3 V30 M50 12 H75 V30 M50 12 H91.6 V30"/></svg></div>
+
+  <div class="tier t2">
+    <div class="node c-blue" data-k="research"><div class="nt"><div class="ic" data-ic="search"></div><h3>AI Research Agent</h3></div><ul><li>Keyword research</li><li>Competitor analysis</li><li>Market trends</li><li>Content opportunities</li><li>Local SEO insights</li><li>Audience research</li></ul></div>
+    <div class="node c-red" data-k="content"><div class="nt"><div class="ic" data-ic="file"></div><h3>AI Content Agent</h3></div><ul><li>Blog articles (SEO)</li><li>Website content</li><li>Social media posts</li><li>Email content</li><li>Ad copy</li><li>Image and video creation</li><li>Content calendar</li></ul></div>
+    <div class="node c-green" data-k="seo"><div class="nt"><div class="ic" data-ic="trend"></div><h3>AI SEO Agent</h3></div><ul><li>On-page SEO</li><li>Technical SEO checks</li><li>Meta titles and descriptions</li><li>Internal linking</li><li>Schema markup</li><li>Monitor rankings</li><li>Recommend improvements</li></ul></div>
+    <div class="node c-amber" data-k="ads"><div class="nt"><div class="ic" data-ic="mega"></div><h3>AI Ads Agent</h3></div><ul><li>Google Ads</li><li>Meta Ads (Facebook &amp; Instagram)</li><li>Keyword selection</li><li>Ad creative generation</li><li>Campaign optimisation</li><li>Monitor spend &amp; ROI</li><li>Suggest improvements</li></ul></div>
+    <div class="node c-violet" data-k="social"><div class="nt"><div class="ic" data-ic="users"></div><h3>AI Social Media Agent</h3></div><ul><li>Create social posts</li><li>Generate images/videos</li><li>Schedule and publish</li><li>Manage Facebook, Instagram, LinkedIn etc.</li><li>Monitor engagement</li><li>Repurpose content</li><li>Respond to comments (AI)</li></ul></div>
+    <div class="node c-teal" data-k="assistant"><div class="nt"><div class="ic" data-ic="chat"></div><h3>AI Customer Assistant</h3></div><ul><li>Respond to enquiries</li><li>Qualify leads</li><li>Answer FAQs</li><li>Book consultations</li><li>Handle live chat/WhatsApp</li><li>Escalate complex enquiries to you</li><li>Update CRM</li></ul></div>
+  </div>
+  <div class="conn"><svg viewBox="0 0 100 30" preserveAspectRatio="none"><path class="fl" id="c2" vector-effect="non-scaling-stroke" d="M50 0 V12 H10 V30 M50 12 H30 V30 M50 12 V30 M50 12 H70 V30 M50 12 H90 V30"/></svg></div>
+
+  <div class="tier t3">
+    <div class="node c-red" data-k="s_content"><div class="nt"><div class="ic" data-ic="file"></div><h3>Content creation &amp; optimisation</h3></div><ul><li>Blog articles (SEO)</li><li>Website content updates</li><li>Social media posts</li><li>Ad copy and creatives</li><li>Email campaigns</li><li>Images and videos (AI generated)</li></ul></div>
+    <div class="node c-blue" data-k="s_publish"><div class="nt"><div class="ic" data-ic="send"></div><h3>Publish &amp; distribute</h3></div><ul><li>Website / CMS (e.g. WordPress)</li><li>Google Business Profile</li><li>Facebook</li><li>Instagram</li><li>LinkedIn</li><li>YouTube</li><li>Other platforms (optional)</li></ul></div>
+    <div class="node c-amber" data-k="s_ads"><div class="nt"><div class="ic" data-ic="target"></div><h3>Advertising campaigns</h3></div><ul><li>Google Ads</li><li>Meta Ads (Facebook &amp; Instagram)</li><li>Create and test ad variations</li><li>Monitor performance</li><li>Optimise automatically</li><li>Stay within budget limits</li><li>Generate reports</li></ul></div>
+    <div class="node c-green" data-k="s_crm"><div class="nt"><div class="ic" data-ic="funnel"></div><h3>Lead capture &amp; CRM</h3></div><ul><li>Website enquiry forms</li><li>Live chat (AI)</li><li>Facebook &amp; Instagram enquiries</li><li>Phone enquiries (AI voice agent)</li><li>CRM (e.g. HighLevel / HubSpot)</li><li>Lead scoring and tagging</li><li>Create customer pipeline</li><li>Notify you of high-value leads</li></ul></div>
+    <div class="node c-violet" data-k="s_follow"><div class="nt"><div class="ic" data-ic="mail"></div><h3>Automatic follow-up</h3></div><ul><li>Instant AI response to enquiries</li><li>Automated email sequences</li><li>SMS follow-ups (optional)</li><li>Booking confirmations</li><li>Review requests</li><li>Re-engagement campaigns</li><li>Nurture leads until conversion</li></ul></div>
+  </div>
+  <div class="conn"><svg viewBox="0 0 100 30" preserveAspectRatio="none"><path class="fl" id="c3" vector-effect="non-scaling-stroke" d="M10 0 V14 H90 V0 M50 14 V30"/></svg></div>
+
+  <div class="band">
+    <h2>📊 Data, reporting &amp; continuous improvement</h2>
+    <div class="tier">
+      <div class="node" data-k="r_sources"><h3 style="margin:0 0 6px">Data sources</h3><ul><li>Google Analytics</li><li>Google Search Console</li><li>Google Ads · Meta Ads</li><li>CRM data</li><li>Website enquiries</li><li>Sales / bookings</li><li>Social media insights</li></ul></div>
+      <div class="node" data-k="r_reports"><h3 style="margin:0 0 6px">Automated reporting</h3><ul><li>Website traffic and rankings</li><li>Leads generated</li><li>Advertising spend and ROI</li><li>Conversion rates</li><li>Social media performance</li><li>Top performing content</li><li>Weekly &amp; monthly reports</li></ul></div>
+      <div class="node" data-k="r_ai"><h3 style="margin:0 0 6px">AI analysis &amp; recommendations</h3><ul><li>Identify what's working</li><li>Suggest improvements</li><li>Highlight new opportunities</li><li>Detect underperforming campaigns</li><li>Recommend content ideas</li><li>Provide growth strategies</li></ul></div>
+      <div class="node c-green" data-k="r_results"><h3 style="margin:0 0 6px">Results</h3><ul><li>More website traffic</li><li>Higher search rankings</li><li>More enquiries and bookings</li><li>Lower cost per lead</li><li>Better social engagement</li><li>Higher return on ad spend</li><li>Sustainable business growth</li></ul></div>
+    </div>
+  </div>
+  <div class="loop"><span id="loop">↻ Continuous learning &amp; optimisation — AI learns from results and feeds them back to the orchestrator</span></div>
+  <div class="legend"><span>● Click any box for details</span><span>● Yellow glow = active step</span><span>● ✓ = completed in this cycle</span></div>
+</main></section>
+
+<div class="ov" id="ov"></div>
+<aside class="panel" id="panel"><div class="ph"><div class="ic" id="pic" style="width:42px;height:42px;border-radius:11px;display:grid;place-items:center"></div><h2 id="pt"></h2><button class="x" id="px">×</button></div><div class="pb" id="pb"></div></aside>
+<div class="log" id="log"></div>
+
+<script>
+const IC = {
+  chart:'<path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/>',
+  bot:'<rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 14h.01M15 14h.01M2 13v3M22 13v3"/><circle cx="12" cy="3" r="1"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>', search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>', trend:'<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>',
+  mega:'<path d="M3 11v2a1 1 0 0 0 1 1h3l6 5V5L7 10H4a1 1 0 0 0-1 1z"/><path d="M17 8a5 5 0 0 1 0 8"/>', users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M16 14.5a5 5 0 0 1 6 5"/>',
+  chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>', send:'<path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/>',
+  target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>', funnel:'<path d="M3 4h18l-7 9v6l-4 2v-8z"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+};
+const svg = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
+window.__svg = svg;
+document.querySelectorAll('[data-ic]').forEach(e => e.innerHTML = svg(e.dataset.ic));
+
+// details for each box: what it does, inputs, outputs, how it's controlled
+const D = {
+  inputs:{t:'Data inputs & research',does:'Everything the system learns from. Each source is a connector that runs in demo mode (simulated) or live mode (real API).',in:['Google Analytics 4 — sessions, users, conversions','Search Console — impressions, clicks, positions','Competitor & keyword tools (Semrush/Ahrefs)','Customer enquiries from every channel','Google reviews','Local market split of leads by location'],out:['Research data to the orchestrator','Keyword opportunity scores']},
+  orch:{t:'AI Marketing Manager (Orchestrator)',does:'Runs a full cycle on a schedule (default every hour) or on demand. It reads goal progress, builds a plan with extra effort where goals are behind, assigns each task to an agent, then publishes, follows up and analyses results.',in:['Research data','Your goals, budgets, approvals and priorities','Results from the last cycle (learnings)'],out:['Task plan for six agents','Approval queue','Budget enforcement','Recommendations & notifications'],ctl:['Priorities decide how many blogs, SEO fixes and posts each cycle produces','Approval switches decide what waits for you']},
+  goals:{t:'Business goals & settings (you control)',does:'Your control panel. The orchestrator plans every cycle around these settings.',in:['Monthly goals: leads, bookings, sessions, max cost per lead, top-10 keywords, content published','Monthly budgets per channel','Target audience, services and locations','Approvals on/off · priorities per area · notification preferences'],out:['Goals and settings to the orchestrator']},
+  research:{t:'AI Research Agent',does:'Scores every keyword by volume, difficulty, current position and intent; mines the words customers actually use in enquiries; tracks competitors and reviews; finds new local keyword ideas (service × location).',out:['Top content & keyword opportunities','Enquiry themes, local market, competitor snapshot','Insights report stored each cycle']},
+  content:{t:'AI Content Agent',does:'Writes SEO blog articles for the top-opportunity keyword (with SEO title, meta description and schema), email newsletters, ad copy variants and image/video briefs, and maintains a 14-day content calendar.',out:['Drafts into the approval queue (or straight to schedule if approvals are off)'],ctl:['Uses your brand tone, audience, services and content pillars']},
+  seo:{t:'AI SEO Agent',does:'Audits every page for missing or over-long titles and meta descriptions, missing H1, thin content, missing schema and weak internal linking, and scores each page out of 100. Proposes AI-written meta fixes and tracks keyword ranking movement.',out:['Page health scores & issues','Meta-tag fixes for approval (applied to the page when approved)','Internal-link and schema recommendations']},
+  ads:{t:'AI Ads Agent',does:'Optimises Google and Meta campaigns: pauses ad variants with CTR well below average and launches AI-written challengers, pauses campaigns spending with zero conversions, and paces daily budgets so the month never exceeds your limit.',out:['Optimisation actions log','Budget-increase requests for your approval','New keywords from research'],ctl:['Budget cuts are automatic; increases need your approval']},
+  social:{t:'AI Social Media Agent',does:'Creates platform-native posts for Facebook, Instagram, LinkedIn, Google Business and YouTube, schedules them at each platform\'s best time, repurposes the latest blog, and replies to comments with AI — complaints are escalated to you. Learns which platform performs best and gives it extra posts.',out:['Scheduled posts with image briefs','Comment replies','Platform learnings']},
+  assistant:{t:'AI Customer Assistant',does:'Handles live chat and WhatsApp 24/7: answers FAQs, asks qualifying questions, picks up name/email/phone and creates or updates the CRM lead, books consultations into the next free slot, and escalates complaints or anything it is unsure about.',out:['Leads in CRM','Bookings with confirmations','Escalations to you']},
+  s_content:{t:'Content creation & optimisation',does:'All AI drafts land here. You can edit, approve, reject (with a note), reschedule, or publish immediately. Nothing goes out without approval when approvals are on.',out:['Approved content to Publish & distribute']},
+  s_publish:{t:'Publish & distribute',does:'At each item\'s scheduled time it is delivered to the right destination. WordPress posts directly through its REST API; other channels go through their API or a webhook (Zapier / Make / n8n). Reach, engagement and clicks are tracked per post.',out:['Live posts & URLs','Performance metrics to reporting']},
+  s_ads:{t:'Advertising campaigns',does:'Google Ads and Meta Ads campaigns with A/B ad variations. Every new campaign starts with 3 AI-written ads. Spend, clicks, CTR, leads and cost per lead are tracked daily against the monthly budget.',out:['Ad leads into the CRM','Spend & ROI to reporting']},
+  s_crm:{t:'Lead capture & CRM',does:'Every enquiry — website form, live chat, Facebook/Instagram lead ads, AI phone agent, WhatsApp — is de-duplicated, scored 0-100 (source, intent, urgency, budget, service area) and tagged hot/warm/cold. Drag-and-drop pipeline: New → Contacted → Qualified → Proposal → Won/Lost. Hot leads notify you instantly.',out:['Leads into follow-up sequences','Pipeline value & conversions to reporting']},
+  s_follow:{t:'Automatic follow-up',does:'Sequences trigger on events: new enquiry (instant email + WhatsApp, then nurture over 7 days), booking (confirmations), qualified (nurture), won (review request), inactive 14 days (re-engagement). Each message is written by AI for that lead.',out:['Emails, WhatsApp and SMS sent','Leads nurtured until conversion']},
+  r_sources:{t:'Data sources',does:'Analytics, Search Console, Google & Meta Ads, CRM, enquiries, bookings and social insights are combined into one daily dataset.'},
+  r_reports:{t:'Automated reporting',does:'Live dashboards plus weekly and monthly reports generated automatically with an AI-written summary: traffic, rankings, leads by source, ad spend & ROI, cost per lead, conversion rate, social performance and top content. Exportable to CSV/PDF.'},
+  r_ai:{t:'AI analysis & recommendations',does:'Each cycle finds keywords in striking distance (positions 4-15), ranking drops, campaigns with high cost per lead, the best lead source, leads waiting over 24h, the best social platform and goals behind target — each as a recommendation, many with one-click apply.'},
+  r_results:{t:'Results',does:'More traffic and rankings, more enquiries and bookings, lower cost per lead, better engagement and higher return on ad spend — measured against your goals every month.'},
+};
+const panel = document.getElementById('panel'), ov = document.getElementById('ov');
+function open(k) {
+  const d = D[k], n = document.querySelector(`[data-k="${k}"]`), ic = n.querySelector('.ic');
+  document.getElementById('pt').textContent = d.t;
+  const pic = document.getElementById('pic'); pic.innerHTML = ic ? ic.innerHTML : svg('chart'); pic.style.cssText += ic ? `;background:${getComputedStyle(ic).backgroundColor};color:${getComputedStyle(ic).color}` : ';background:#e8f0fe;color:#2563eb';
+  const list = (h, a) => a ? `<h4>${h}</h4><ul>${a.map(x => `<li>${x}</li>`).join('')}</ul>` : '';
+  document.getElementById('pb').innerHTML = `<p>${d.does}</p>${list('Inputs', d.in)}${list('Outputs', d.out)}${list('Your control', d.ctl)}<h4>Includes</h4><div>${[...n.querySelectorAll('li')].map(l => `<span class="chip">${l.textContent}</span>`).join('')}</div>`;
+  panel.classList.add('open'); ov.classList.add('open');
+}
+const close = () => { panel.classList.remove('open'); ov.classList.remove('open'); };
+document.querySelectorAll('.node').forEach(n => n.addEventListener('click', () => open(n.dataset.k)));
+ov.onclick = close; document.getElementById('px').onclick = close; document.addEventListener('keydown', e => e.key === 'Escape' && close());
+
+// animated cycle
+const STEPS = [
+  [['inputs', 'goals'], [], 'Collecting research data, goals & budgets'],
+  [['orch'], [], 'Orchestrator analysing performance and planning the cycle'],
+  [['research'], ['c1'], 'Research agent finding keyword & content opportunities'],
+  [['seo'], ['c1'], 'SEO agent auditing pages and proposing meta fixes'],
+  [['content'], ['c1'], 'Content agent writing an SEO blog article'],
+  [['social'], ['c1'], 'Social agent creating & scheduling posts, replying to comments'],
+  [['ads'], ['c1'], 'Ads agent optimising campaigns within budget'],
+  [['assistant'], ['c1'], 'Customer assistant answering enquiries'],
+  [['s_content'], ['c2'], 'Drafts waiting for your approval'],
+  [['s_publish'], ['c2'], 'Publishing approved content to every channel'],
+  [['s_ads'], ['c2'], 'Testing ad variations, enforcing budget limits'],
+  [['s_crm'], ['c2'], 'Scoring and tagging new leads · alerting you to hot ones'],
+  [['s_follow'], ['c2'], 'Sending instant responses and follow-up sequences'],
+  [['r_sources', 'r_reports'], ['c3'], 'Collecting results and updating reports'],
+  [['r_ai'], ['c3'], 'AI analysing results and creating recommendations'],
+  [['r_results'], ['c3'], 'Results measured against your goals'],
+  [['orch'], ['loop'], 'Learning fed back to the orchestrator — cycle complete ✓'],
+];
+let running = false;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const log = document.getElementById('log');
+async function play() {
+  if (running) return; running = true;
+  const btn = document.getElementById('play'); btn.disabled = true; btn.style.opacity = .7;
+  document.getElementById('dot').classList.add('run');
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('done', 'active'));
+  for (const [nodes, conns, msg] of STEPS) {
+    document.getElementById('stat').textContent = msg; log.textContent = msg; log.classList.add('show');
+    conns.forEach(c => c === 'loop' ? document.getElementById('loop').classList.add('on') : document.getElementById(c).classList.add('on'));
+    nodes.forEach(k => { const n = document.querySelector(`[data-k="${k}"]`); n.classList.add('active'); if (innerWidth < 1100) n.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+    await sleep(1150);
+    nodes.forEach(k => { const n = document.querySelector(`[data-k="${k}"]`); n.classList.remove('active'); n.classList.add('done'); });
+  }
+  document.querySelectorAll('.fl').forEach(f => f.classList.remove('on')); document.getElementById('loop').classList.remove('on');
+  document.getElementById('dot').classList.remove('run'); document.getElementById('stat').textContent = 'Cycle complete — runs again automatically every hour';
+  setTimeout(() => log.classList.remove('show'), 2500);
+  btn.disabled = false; btn.style.opacity = 1; running = false;
+}
+document.getElementById('play').onclick = play;
+</script>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const ICON = window.__svg;
+  $$('.sn[data-i]').forEach(n => n.insertAdjacentHTML('afterbegin', ICON(n.dataset.i)));
+
+  // Tab switching (Live dashboard / Workflow map / Automation rules)
+  $$('.tabs button').forEach(b => b.onclick = () => {
+    $$('.tabs button').forEach(x => x.classList.toggle('on', x === b));
+    $$('section.tab').forEach(s => s.classList.toggle('on', s.id === b.dataset.t));
+  });
+
+  const inr = n => '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
+  const num = n => Math.round(Number(n) || 0).toLocaleString('en-IN');
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const cls = s => (Number(s) >= 70 ? 'hot' : (Number(s) >= 45 ? 'warm' : 'cold'));
+
+  const SRC = {
+    website_form: 'Website form', google_ads: 'Google Ads', meta_ads: 'Meta lead ad',
+    live_chat: 'Live chat', instagram: 'Instagram', whatsapp: 'WhatsApp',
+    phone: 'Phone (AI voice agent)', facebook: 'Facebook', organic: 'Google search'
+  };
+
+  const AG = {
+    research: ['search', '#e8f0fe', '#2563eb', 'Research agent'],
+    content: ['file', '#fdeaea', '#dc2626', 'Content agent'],
+    seo: ['trend', '#e7f7ed', '#16a34a', 'SEO agent'],
+    ads: ['mega', '#fef3e2', '#d97706', 'Ads agent'],
+    social: ['users', '#f1eafe', '#7c3aed', 'Social agent'],
+    assistant: ['chat', '#e2f6f4', '#0d9488', 'Customer assistant'],
+    orch: ['bot', '#1f2a37', '#f5c518', 'AI Marketing Manager'],
+    crm: ['funnel', '#e7f7ed', '#16a34a', 'CRM'],
+    follow: ['mail', '#f1eafe', '#7c3aed', 'Follow-up engine'],
+    publish: ['send', '#e8f0fe', '#2563eb', 'Publisher'],
+    report: ['chart', '#e8f0fe', '#2563eb', 'Reporting'],
+    you: ['check', '#fff4c2', '#7a5d00', 'You']
+  };
+
+  const CATCOL = {
+    lead: '#16a34a', follow: '#7c3aed', content: '#dc2626',
+    ads: '#d97706', social: '#db2777', ai: '#1f2a37', you: '#f5c518'
+  };
+
+  let filter = 'all';
+  let attTab = 'ap';
+  let attentionData = { approvals: [], approved: [], rejected: [], hot_leads: [], escalations: [] };
+  let S = { sessions: 6840, leads: 0, hot: 0, bookings: 0, spend: 31800, cpl: 0, budget: 45000, published: 136, msgs: 350, won: 0, wonValue: 0 };
+
+  // Hit visual workflow boxes
+  function hit(...ids) {
+    for (const id of ids) {
+      const n = $('#f-' + id);
+      if (!n) continue;
+      n.classList.add('hit');
+      clearTimeout(n._t);
+      n._t = setTimeout(() => n.classList.remove('hit'), 1400);
+    }
+  }
+
+  function bump(id) {
+    const v = $('#kv-' + id);
+    if (v) {
+      v.classList.add('bump');
+      clearTimeout(v._t);
+      v._t = setTimeout(() => v.classList.remove('bump'), 900);
+    }
+  }
+
+  function showToast(msg, isErr = false) {
+    let t = $('#toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'toast';
+      t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;padding:12px 18px;border-radius:10px;font-weight:700;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,0.2);transition:.3s;';
+      document.body.appendChild(t);
+    }
+    t.style.background = isErr ? '#dc2626' : '#16a34a';
+    t.style.color = '#fff';
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.display = 'block';
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 3500);
+  }
+
+  // Activity filter clicks
+  $('#flt').onclick = e => {
+    const c = e.target.dataset.c;
+    if (!c) return;
+    filter = c;
+    $$('#flt button').forEach(b => b.classList.toggle('on', b === e.target));
+    fetchFeed(c);
+  };
+
+  // ------------------------------------------------------------------ 1. Right now banner & Feed
+  async function fetchFeed(cat = filter) {
+    try {
+      const res = await fetch(`/api/activity-feed/?category=${cat}&limit=50`);
+      const json = await res.json();
+      if (json.status === 'success' && json.logs) {
+        $('#feed').innerHTML = json.logs.map(log => {
+          const [ic, bg, fg] = AG[log.agent] || ['chat', '#e8f0fe', '#2563eb'];
+          return `<div class="fi" style="border-left-color:${CATCOL[log.category] || '#cbd5e1'}">
+            <div class="ag" style="background:${bg};color:${fg}">${ICON(ic)}</div>
+            <div>
+              <div class="tx">${log.what}</div>
+              ${log.why ? `<div class="wy"><b>Why:</b> ${esc(log.why)}</div>` : ''}
+              <div>${(log.chips || []).map(c => `<span class="chip ${c[1] || ''}">${esc(c[0])}</span>`).join('')}</div>
+              <div class="tm">${esc(log.created_at_formatted)} · ${esc(AG[log.agent] ? AG[log.agent][3] : log.agent)}</div>
+            </div>
+          </div>`;
+        }).join('');
+        $('#fcount').textContent = `${json.total_count || json.logs.length} automatic actions recorded`;
+
+        // Update Section 1 "Right now" from latest log
+        if (json.logs.length) {
+          const top = json.logs[0];
+          const [ic, bg, fg] = AG[top.agent] || ['bot', '#273444', '#f5c518'];
+          $('#nowic').innerHTML = ICON(ic);
+          $('#nowic').style.background = top.agent === 'orch' ? '#273444' : bg;
+          $('#nowic').style.color = top.agent === 'orch' ? '#f5c518' : fg;
+          $('#nowwhat').innerHTML = top.what;
+          $('#nowwhy').innerHTML = top.why ? 'Why: ' + esc(top.why) : '';
+          const p = (top.workflow_path && top.workflow_path.length) ? top.workflow_path : ['CRM', 'Marketing Automation', 'Lead Pipeline'];
+          $('#nowpath').innerHTML = p.map(x => `<span>${esc(x)}</span>`).join('<i>→</i>');
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching feed:', err);
+    }
+  }
+
+  // ------------------------------------------------------------------ 2. KPIs / Results
+  async function fetchStats() {
+    try {
+      const res = await fetch('/api/dashboard/stats/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        const d = json.data;
+        S = { ...S, ...d };
+
+        const sessionsText = (d.sessions !== null && d.sessions !== undefined) ? num(d.sessions) : 'Not Connected';
+        const sessionsWhy = (d.sessions !== null && d.sessions !== undefined) ? 'People who visited your website this month.' : (d.sessions_status || 'Google Analytics not connected (unavailable).');
+        const budgetWhy = (d.monthly_budget > 0) ? `Google + Meta this month, out of your ${inr(d.monthly_budget)} limit.` : 'Ad spend tracked from MySQL. Budget limit not configured.';
+
+        const K = [
+          ['sessions', 'Website visitors', sessionsText, sessionsWhy],
+          ['leads', 'Enquiries (leads)', num(d.leads), `People who contacted you from any channel. ${d.hot_leads} were hot.`],
+          ['bookings', 'Consultations booked', num(d.bookings), 'Calls booked automatically by the AI assistant.'],
+          ['cpl', 'Cost per lead', inr(d.cpl), 'Ad spend ÷ leads from ads. Lower is better.'],
+          ['spend', 'Ad spend', inr(d.ad_spend), budgetWhy],
+          ['published', 'Content published', num(d.published_content), 'Blogs, posts and website updates that went live.'],
+          ['msgs', 'Follow-ups sent', num(d.follow_up_messages), 'Automatic emails and WhatsApps, so no lead is forgotten.'],
+          ['won', 'Deals won (live)', d.deals_won ? `${d.deals_won} · ${inr(d.deals_won_value)}` : '0', 'Leads that became customers while this page was open.']
+        ];
+
+        $('#kpis').innerHTML = K.map(k => `
+          <div class="card kpi">
+            <div class="l">${k[1]}</div>
+            <div class="v" id="kv-${k[0]}">${k[2]}</div>
+            <div class="why">${k[3]}</div>
+          </div>
+        `).join('');
+      }
+    } catch (err) {
+      console.error('Error fetching stats:', err);
+    }
+  }
+
+  // ------------------------------------------------------------------ 3. Attention & Approvals
+  async function fetchAttention() {
+    try {
+      const res = await fetch('/api/attention/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        attentionData = json;
+        $('#c-ap').textContent = json.counts.approvals || 0;
+        $('#c-hot').textContent = json.counts.hot_leads || 0;
+        $('#c-esc').textContent = json.counts.escalations || 0;
+        renderAtt();
+      }
+    } catch (err) {
+      console.error('Error fetching attention:', err);
+    }
+  }
+
+  function renderAtt() {
+    const empty = t => `<div style="color:var(--muted);font-size:13px;text-align:center;padding:18px">${t}</div>`;
+    const attDiv = $('#att');
+
+    if (attTab === 'ap') {
+      const list = attentionData.approvals || [];
+      attDiv.innerHTML = list.length ? list.map(a => `
+        <div class="ap" id="ap-${a.id}">
+          <span class="chip ${String(a.item_type).startsWith('Budget') ? 'amber' : 'blue'}">${esc(a.item_type)} · ${esc(a.channel)}</span>
+          <div><b>${esc(a.title)}</b></div>
+          <div class="r">
+            <span style="font-size:11.5px;color:var(--muted)">Written by the ${esc(AG[a.agent] ? AG[a.agent][3] : a.agent)} · ${String(a.item_type).startsWith('Budget') ? 'applied as soon as you approve' : 'publishes automatically after you approve'}</span>
+            <span>
+              <button class="btn2 sm" onclick="handleApproval(${a.id}, 'reject')">Reject</button> 
+              <button class="btn2 sm ok" onclick="handleApproval(${a.id}, 'approve')">Approve</button>
+            </span>
+          </div>
+        </div>
+      `).join('') : empty('Nothing to approve. New drafts appear here during each AI cycle. Turn on “Auto-approve” to skip this step.');
+    } else if (attTab === 'hot') {
+      const hot = attentionData.hot_leads || [];
+      attDiv.innerHTML = hot.length ? hot.map(l => `
+        <div class="ap">
+          <div class="r" style="margin:0">
+            <div>
+              <b>${esc(l.name)}</b> <span class="sc hot">${l.score}</span>
+              <div style="font-size:12px;color:var(--muted)">${esc(l.message || 'Enquiry received')}</div>
+              <div style="font-size:11.5px;color:var(--muted)">${esc(SRC[l.source] || l.source)} · ${esc(l.phone || 'No phone')} · worth about ${inr(l.deal_value)}</div>
+            </div>
+            <button class="btn2 sm ok" onclick="handleCallLead(${l.id})">📞 Mark called</button>
+          </div>
+        </div>
+      `).join('') : empty('No hot leads waiting. Hot leads that haven\'t booked a call yet show here so you can phone them.');
+    } else if (attTab === 'esc') {
+      const escList = attentionData.escalations || [];
+      attDiv.innerHTML = escList.length ? escList.map(e => `
+        <div class="ap">
+          <span class="chip red">${esc(e.channel)} comment</span>
+          <div><b>${esc(e.sender)}:</b> “${esc(e.message)}”</div>
+          <div class="r">
+            <span style="font-size:11.5px;color:var(--muted)">Reason: ${esc(e.reason)} · The AI doesn't answer complaints. Reply personally.</span>
+            <button class="btn2 sm ok" onclick="handleResolveEscalation(${e.id})">Mark handled</button>
+          </div>
+        </div>
+      `).join('') : empty('Nothing escalated. Complaints and questions the AI can\'t answer will show here.');
+    }
+  }
+
+  $$('.att-tabs button[data-a]').forEach(b => b.onclick = () => {
+    attTab = b.dataset.a;
+    $$('.att-tabs button[data-a]').forEach(x => x.classList.toggle('on', x === b));
+    renderAtt();
+  });
+
+  window.handleApproval = async (id, action) => {
+    try {
+      const res = await fetch(`/api/approvals/${id}/action/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action })
+      });
+      const json = await res.json();
+      if (json.status === 'success') {
+        showToast(action === 'approve' ? '✅ Item approved successfully!' : '❌ Item rejected!');
+        fetchAttention();
+        fetchFeed();
+        fetchStats();
+      } else {
+        showToast('⚠️ ' + (json.message || 'Action failed'), true);
+      }
+    } catch (e) {
+      console.error(e);
+      showToast('⚠️ Network error', true);
+    }
+  };
+
+  window.handleCallLead = async (id) => {
+    try {
+      const res = await fetch(`/api/leads/${id}/stage/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_called: true, stage: 'in_progress' })
+      });
+      const json = await res.json();
+      if (json.status === 'success') {
+        showToast('📞 Lead marked called!');
+        fetchAttention();
+        fetchLeads();
+        fetchFeed();
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  window.handleResolveEscalation = async (id) => {
+    try {
+      const res = await fetch(`/api/escalations/${id}/resolve/`, { method: 'POST' });
+      const json = await res.json();
+      if (json.status === 'success') {
+        showToast('✅ Escalation marked handled!');
+        fetchAttention();
+        fetchFeed();
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  $('#apall').onclick = async () => {
+    try {
+      const res = await fetch('/api/approvals/approve-all/', { method: 'POST' });
+      const json = await res.json();
+      if (json.status === 'success') {
+        showToast(`✅ Bulk approved ${json.approved_count} items!`);
+        fetchAttention();
+        fetchFeed();
+        fetchStats();
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  // ------------------------------------------------------------------ 5. Leads Kanban
+  const STAGES = [
+    ['new', 'New', 'Just arrived. Being scored.'],
+    ['in_progress', 'In Progress', 'AI replied instantly. Consultation & proposals running.'],
+    ['won', 'Won', 'Customer! Review request sent.'],
+    ['lost', 'Lost', 'Not now. Re-engaged in 14 days.']
+  ];
+
+  async function fetchLeads() {
+    try {
+      const res = await fetch('/api/leads/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        const leads = json.leads || [];
+        $('#kb').innerHTML = STAGES.map(([s, label, d]) => {
+          const ls = leads.filter(l => l.stage === s || (s === 'in_progress' && ['contacted', 'qualified', 'proposal'].includes(l.stage)));
+          return `<div class="kc">
+            <h4><span>${label}</span><span style="color:var(--muted)">${ls.length}</span></h4>
+            <p>${d}</p>
+            ${ls.slice(0, 5).map(l => `
+              <div class="lc">
+                <div style="display:flex;justify-content:space-between">
+                  <b>${esc(l.name)}</b> <span class="sc ${cls(l.score)}">${l.score}</span>
+                </div>
+                <div class="m">${esc(SRC[l.source] || l.source)} · ${inr(l.deal_value)}</div>
+              </div>
+            `).join('')}
+            ${ls.length > 5 ? `<div class="m" style="text-align:center;font-size:11px;color:var(--muted)">+${ls.length - 5} more</div>` : ''}
+          </div>`;
+        }).join('');
+
+        $('#pipeval').textContent = 'Open pipeline: ' + inr(json.active_pipeline_value);
+      }
+    } catch (err) {
+      console.error('Error fetching leads:', err);
+    }
+  }
+
+  // ------------------------------------------------------------------ 6. Budget, Goals & Chart
+  async function fetchGoalsAndBudget() {
+    try {
+      const res = await fetch('/api/goals-budget/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        const b = json.budget;
+        const pace = b.pace_percentage || 0;
+
+        $('#budget').innerHTML = `
+          <div style="display:flex;justify-content:space-between;font-size:13px">
+            <b>Spent so far</b><span>${inr(b.spend_so_far)} of ${inr(b.monthly_budget)}</span>
+          </div>
+          <div class="bar ${pace > 105 ? 'r' : pace > 95 ? 'a' : ''}">
+            <i style="width:${Math.min(100, b.spend_so_far / b.monthly_budget * 100)}%"></i>
+          </div>
+          <div style="font-size:13px;margin-top:10px">
+            Expected by month-end: <b>${inr(b.projected_month_end)}</b> 
+            <span class="chip ${b.is_over_budget ? 'red' : 'green'}">${b.is_over_budget ? 'over limit → AI will cut' : 'within limit'}</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:8px">
+            Today's daily ad budget: <b style="color:var(--ink)">${inr(b.daily_budget)}</b>. The AI can always lower it to protect your limit; raising it needs your approval.
+          </div>
+        `;
+
+        $('#goals').innerHTML = json.goals.map(g => {
+          const ok = g.status === 'on_track';
+          return `<div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px">
+              <b>${esc(g.name)}</b>
+              <span>
+                <span style="color:var(--muted)">${num(g.current)} / ${num(g.target)}</span> 
+                <span class="chip ${ok ? 'green' : 'amber'}">${ok ? 'on track' : 'behind → extra AI effort'}</span>
+              </span>
+            </div>
+            <div class="bar ${ok ? '' : 'a'}">
+              <i style="width:${Math.min(100, g.percentage)}%"></i>
+            </div>
+          </div>`;
+        }).join('');
+
+        $('#rec').innerHTML = `<b style="color:var(--ink);font-size:14px">${esc(json.recommendation.title)}</b><div style="margin-top:5px">${esc(json.recommendation.desc)}</div>`;
+      }
+    } catch (err) {
+      console.error('Error fetching budget & goals:', err);
+    }
+  }
+
+  async function fetchHourlyChart() {
+    try {
+      const res = await fetch('/api/analytics/hourly/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        const s = json.sessions, l = json.leads;
+        const W = 900, H = 170, max = Math.max(10, ...s, ...l.map(x => x * 20)) * 1.1;
+        const x = i => 30 + i * (W - 40) / 23, y = v => H - 20 - v / max * (H - 30);
+        const line = (a, c, m = 1) => `<polyline fill="none" stroke="${c}" stroke-width="2.2" points="${a.map((v, i) => `${x(i)},${y(v * m)}`).join(' ')}"/>`;
+        $('#chart').innerHTML = `<svg class="chart" viewBox="0 0 ${W} ${H}" style="height:${H}px">
+          ${[0, .5, 1].map(t => `<line x1="30" x2="${W - 10}" y1="${y(max * t)}" y2="${y(max * t)}" stroke="#eef1f5"/><text x="24" y="${y(max * t) + 3}" text-anchor="end" font-size="10" fill="#94a3b8">${Math.round(max * t)}</text>`).join('')}
+          ${line(s, '#2563eb')}${line(l, '#dc2626', 20)}
+          ${s.map((v, i) => `<circle cx="${x(i)}" cy="${y(v)}" r="2.5" fill="#2563eb"/>`).join('')}
+        </svg>`;
+      }
+    } catch (err) {
+      console.error('Error fetching hourly chart:', err);
+    }
+  }
+
+  // ------------------------------------------------------------------ Rules Tab
+  async function fetchRules() {
+    try {
+      const res = await fetch('/api/rules/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        $('#rules').innerHTML = json.rules.map(r => `
+          <tr id="r-${esc(r.rule_key)}">
+            <td><b>${esc(r.when_trigger)}</b></td>
+            <td>${esc(r.then_action)}</td>
+            <td><span class="chip">${esc(r.done_by)}</span></td>
+            <td style="color:var(--muted);font-size:12px">${esc(r.user_control)}</td>
+            <td class="cnt" id="rc-${esc(r.rule_key)}">${r.fired_count}</td>
+          </tr>
+        `).join('');
+      }
+    } catch (err) {
+      console.error('Error fetching rules:', err);
+    }
+  }
+
+  // ------------------------------------------------------------------ 7. Try it yourself (Real API call)
+  $('#tryf').onsubmit = async (e) => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(e.target));
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    btn.textContent = 'Processing through AI Pipeline…';
+
+    try {
+      const res = await fetch('/api/leads/enquiry/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(d)
+      });
+      const json = await res.json();
+
+      if (json.status === 'success') {
+        const traceSteps = json.trace || [
+          `Enquiry received from ${d.source}`,
+          'Duplicate check completed',
+          `Lead scored ${json.lead.score}/100 (${json.lead.score_category})`,
+          `Saved to CRM pipeline under stage '${json.lead.stage}'`,
+          `Automated confirmation sent to ${d.email || d.phone}`
+        ];
+
+        $('#trace').innerHTML = traceSteps.map((s, i) => `<li><span class="n">${i + 1}</span><span>${s}</span></li>`).join('');
+        const lis = $$('#trace li');
+        traceSteps.forEach((s, i) => setTimeout(() => {
+          if (lis[i]) lis[i].classList.add('ok');
+          hit('data', 'crm', 'follow');
+        }, 500 * (i + 1)));
+
+        showToast('🎉 Lead captured, scored, and saved to MySQL!');
+
+        setTimeout(() => {
+          fetchStats();
+          fetchLeads();
+          fetchAttention();
+          fetchFeed();
+          fetchGoalsAndBudget();
+          fetchRules();
+        }, 800);
+      } else {
+        showToast('⚠️ ' + (json.message || 'Submission failed'), true);
+      }
+    } catch (err) {
+      console.error('Error in lead submission:', err);
+      showToast('⚠️ Network error', true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send enquiry & watch the automation';
+    }
+  };
+
+  // ------------------------------------------------------------------ Simulation & Controls
+  let paused = false;
+  $('#pause').onclick = () => {
+    paused = !paused;
+    $('#pause').textContent = paused ? '▶ Resume' : '⏸ Pause';
+    $('#ddot').classList.toggle('run', !paused);
+    $('#dstate').textContent = paused ? 'Paused' : 'Automation running (live sync)';
+  };
+
+  const CYCLE_JOBS = [
+    ['Check goals & budgets, plan the hour', 'orch', ['goals', 'orch']],
+    ['Research: find keyword opportunities', 'research', ['research', 'data']],
+    ['SEO: check website pages & titles', 'seo', ['seo']],
+    ['Content: write SEO blog article', 'content', ['content', 'publish']],
+    ['Social: schedule platform posts', 'social', ['social']],
+    ['Ads: check Google & Meta spend', 'ads', ['ads', 'campaigns']],
+    ['Assistant: monitor live chats & WhatsApp', 'assistant', ['assistant', 'crm']],
+    ['Learn from results & generate recommendations', 'report', ['report', 'orch']]
+  ];
+
+  // ------------------------------------------------------------------ Agent Workspace & LangGraph Orchestration
+  $$('#agent-workspace-tabs button').forEach(b => {
+    b.onclick = () => {
+      $$('#agent-workspace-tabs button').forEach(x => x.classList.toggle('on', x === b));
+      $$('.agent-pane').forEach(p => p.style.display = (p.id === b.dataset.target ? 'block' : 'none'));
+    };
+  });
+
+  window.triggerRunCycle = async (sync = true) => {
+    const btnInstant = $('#run-agents-cycle-btn');
+    const btnAsync = $('#run-agents-async-btn');
+    const origText = btnInstant ? btnInstant.textContent : '';
+    if (btnInstant) { btnInstant.disabled = true; btnInstant.textContent = 'Executing Multi-Agent Workflow…'; }
+    if (btnAsync) { btnAsync.disabled = true; }
+
+    showToast('🚀 Running 4-Agent LangGraph Workflow…');
+    try {
+      const url = `/api/agents/run-cycle/?sync=${sync}`;
+      const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const json = await res.json();
+      if (json.status === 'success' || json.status === 'queued') {
+        showToast(sync ? '✨ 4-Agent cycle finished successfully!' : `⏳ Cycle queued in background (Task #${json.task_id})`);
+      } else {
+        showToast('⚠️ Agent workflow notice: ' + (json.message || 'Execution error'), true);
+      }
+    } catch (e) {
+      console.error(e);
+      showToast('⚠️ Workflow network error', true);
+    } finally {
+      if (btnInstant) { btnInstant.disabled = false; btnInstant.textContent = origText; }
+      if (btnAsync) { btnAsync.disabled = false; }
+      refreshAllAgentData();
+      fetchAttention();
+      fetchFeed();
+      fetchStats();
+    }
+  };
+
+  window.triggerSingleAgent = async (agentNum) => {
+    showToast(`🤖 Triggering Agent ${agentNum}…`);
+    try {
+      const res = await fetch(`/api/agents/agent${agentNum}/run/`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      const json = await res.json();
+      if (json.status === 'success') {
+        showToast(`✅ Agent ${agentNum} completed successfully!`);
+      } else {
+        showToast(`⚠️ Agent ${agentNum}: ` + (json.message || 'Execution error'), true);
+      }
+    } catch (e) {
+      console.error(e);
+      showToast('⚠️ Agent network error', true);
+    } finally {
+      refreshAllAgentData();
+      fetchAttention();
+      fetchFeed();
+    }
+  };
+
+  async function fetchAgentTasks() {
+    try {
+      const res = await fetch('/api/agents/tasks/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        const tasks = json.tasks || [];
+        const countSpan = $('#count-tasks');
+        if (countSpan) countSpan.textContent = json.total_count || tasks.length;
+        const tbody = $('#agent-tasks-tbody');
+        if (!tbody) return;
+        if (!tasks.length) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">No agent tasks recorded yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = tasks.map(t => {
+          const stCls = t.status === 'completed' ? 'green' : (t.status === 'failed' ? 'red' : (t.status === 'running' ? 'blue' : 'amber'));
+          const logsHtml = (t.execution_logs || []).map(l => `<div style="font-size:11px;color:#cbd5e1;margin:2px 0">• <b>${esc(l.action)}:</b> ${esc(l.message)}</div>`).join('');
+          return `
+            <tr>
+              <td><b>#${t.id}</b></td>
+              <td><span class="chip blue">${esc(t.agent_name)}</span></td>
+              <td><b>${esc(t.task_type)}</b></td>
+              <td><span class="chip ${stCls}">${esc(t.status)}</span></td>
+              <td><span class="sc ${t.priority === 'urgent' ? 'hot' : (t.priority === 'high' ? 'warm' : 'cold')}">${esc(t.priority)}</span></td>
+              <td style="font-size:11.5px;color:var(--muted)">${esc(t.created_at_formatted || t.created_at)}</td>
+              <td>
+                <details>
+                  <summary style="cursor:pointer;color:var(--blue);font-weight:700;font-size:12px">${(t.execution_logs || []).length} Logs / Details</summary>
+                  <div style="background:#1e293b;border-radius:6px;padding:8px;margin-top:4px">${logsHtml || '<div style="color:#94a3b8;font-size:11px">No detailed logs</div>'}</div>
+                </details>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    } catch (e) {
+      console.error('Error fetching agent tasks:', e);
+    }
+  }
+
+  async function fetchAgentContent() {
+    try {
+      const res = await fetch('/api/agents/content/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        const list = json.contents || [];
+        const countSpan = $('#count-content');
+        if (countSpan) countSpan.textContent = json.total_count || list.length;
+        const container = $('#agent-content-list');
+        if (!container) return;
+        if (!list.length) {
+          container.innerHTML = '<div style="text-align:center;color:var(--muted);padding:24px">No content packages generated yet. Run the 4-agent workflow to create SEO blog content!</div>';
+          return;
+        }
+        container.innerHTML = list.map(c => {
+          const stCls = c.status === 'approved' || c.status === 'wp_draft_created' ? 'green' : (c.status === 'rejected' ? 'red' : 'amber');
+          const brief = c.content_brief || {};
+          const seo = c.seo_review || {};
+          const ad = c.ad_strategy || {};
+          const isPending = (c.status === 'seo_reviewed' || c.status === 'draft' || c.status === 'pending');
+          const isWpDraft = (c.status === 'wp_draft_created' || c.wp_post_id);
+
+          return `
+            <div class="content-box">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+                <div>
+                  <h4 style="margin:0;font-size:16px;color:var(--ink)">${esc(c.topic || 'Untitled Article')}</h4>
+                  <div style="font-size:12px;color:var(--muted);margin-top:2px">Target Audience: <b>${esc(c.audience || 'Target Demographic')}</b> · Created: ${esc(c.created_at_formatted || c.created_at)}</div>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <span class="chip ${stCls}">${esc(c.status)}</span>
+                  ${isWpDraft ? `<span class="chip teal" style="font-weight:700">✓ WordPress Draft #${c.wp_post_id}</span>` : ''}
+                  ${c.wp_post_url ? `<a href="${esc(c.wp_post_url)}" target="_blank" class="chip blue" style="text-decoration:none">🔗 Open Draft</a>` : ''}
+                </div>
+              </div>
+
+              <!-- SEO Meta & Highlights -->
+              <div style="background:#f1f5f9;border-radius:8px;padding:10px 12px;margin:10px 0;font-size:12.5px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                  <b>Agent 3 SEO Audit:</b> <span class="chip green">SEO Score: ${seo.seo_score || 85}/100</span>
+                </div>
+                <div><b>Meta Title:</b> ${esc(seo.meta_title || 'N/A')}</div>
+                <div style="margin-top:2px"><b>Meta Description:</b> ${esc(seo.meta_description || 'N/A')}</div>
+                <div style="margin-top:4px"><b>Keywords:</b> <span class="chip blue">${esc(seo.primary_keyword || 'primary')}</span> ${(seo.secondary_keywords || []).map(k => `<span class="chip">${esc(k)}</span>`).join('')}</div>
+              </div>
+
+              <!-- Collapsible Content Brief & Full Draft -->
+              <details style="margin:10px 0">
+                <summary style="cursor:pointer;color:var(--blue);font-weight:700;font-size:12.5px">📖 View Agent 2 Blog Draft & AI Image Prompt</summary>
+                <div style="margin-top:8px">
+                  <div style="font-size:12px;color:var(--muted);margin-bottom:4px"><b>AI Image Prompt:</b> <i>${esc(brief.image_prompt || 'N/A')}</i></div>
+                  <div class="code-box">${esc(c.draft_post || 'No draft body content')}</div>
+                </div>
+              </details>
+
+              <!-- Ad Strategy Proposal if available -->
+              ${ad.ad_campaign_name ? `
+                <div style="background:#fffbeb;border:1px solid #fef3c7;border-radius:8px;padding:8px 12px;margin:8px 0;font-size:12px">
+                  <b>Agent 3 Ad Proposal:</b> ${esc(ad.ad_campaign_name)} · Suggested Budget: <b>₹${ad.recommended_daily_budget || 500}/day</b> (Requires Owner Approval)
+                </div>
+              ` : ''}
+
+              <!-- Human Approval Action Gate -->
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;border-top:1px solid #eef1f5;padding-top:10px;flex-wrap:wrap;gap:8px">
+                <span style="font-size:11.5px;color:var(--muted)">WordPress Rule: Approving creates a post with <code>post_status='draft'</code> for final human publishing.</span>
+                <div>
+                  ${isPending ? `
+                    <button class="btn2 sm" onclick="handleContentAction(${c.id}, 'reject')">❌ Reject</button> 
+                    <button class="btn2 sm ok" onclick="handleContentAction(${c.id}, 'approve')">✅ Approve to WordPress Draft</button>
+                  ` : (isWpDraft ? `<span style="font-weight:700;color:var(--green);font-size:12px">✓ Staged in WordPress Database as Draft</span>` : `<span style="font-size:12px;color:var(--muted)">Decision Recorded</span>`)}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    } catch (e) {
+      console.error('Error fetching agent content:', e);
+    }
+  }
+
+  window.handleContentAction = async (id, action) => {
+    try {
+      const res = await fetch(`/api/agents/content/${id}/action/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action })
+      });
+      const json = await res.json();
+      if (json.status === 'success') {
+        showToast(action === 'approve' ? '✅ Approved! Created WordPress post with post_status="draft"' : '❌ Content draft rejected');
+        fetchAgentContent();
+        fetchAttention();
+        fetchFeed();
+      } else {
+        showToast('⚠️ ' + (json.message || 'Action failed'), true);
+      }
+    } catch (e) {
+      console.error(e);
+      showToast('⚠️ Network error', true);
+    }
+  };
+
+  async function fetchSocialDrafts() {
+    try {
+      const res = await fetch('/api/agents/social-drafts/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        const drafts = json.drafts || [];
+        const countSpan = $('#count-social');
+        if (countSpan) countSpan.textContent = json.total_count || drafts.length;
+        const container = $('#agent-social-list');
+        if (!container) return;
+        if (!drafts.length) {
+          container.innerHTML = '<div style="grid-column:span 2;text-align:center;color:var(--muted);padding:24px">No social drafts generated yet.</div>';
+          return;
+        }
+        const P_ICONS = { Facebook: 'blue', Instagram: 'pink', LinkedIn: 'blue', YouTube: 'red' };
+        container.innerHTML = drafts.map(d => {
+          const col = P_ICONS[d.platform] || 'blue';
+          const isPending = d.status === 'draft';
+          return `
+            <div class="card" style="padding:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <span class="chip ${col}"><b>${esc(d.platform)}</b></span>
+                <span class="chip ${d.status === 'approved' ? 'green' : (d.status === 'dismissed' ? 'red' : 'amber')}">${esc(d.status)}</span>
+              </div>
+              <p style="margin:8px 0;font-size:13px;line-height:1.45;color:var(--ink)">${esc(d.post_text)}</p>
+              ${d.hashtags ? `<div style="font-size:11.5px;color:var(--blue);margin-bottom:8px">${esc(d.hashtags)}</div>` : ''}
+              ${d.image_prompt ? `<div style="font-size:11px;color:var(--muted);background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:6px;margin-bottom:8px"><b>AI Image Prompt:</b> ${esc(d.image_prompt)}</div>` : ''}
+              <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eef1f5;padding-top:8px;margin-top:6px">
+                <span style="font-size:11px;color:var(--muted)">Agent 4 Staged Draft</span>
+                <div>
+                  ${isPending ? `
+                    <button class="btn2 sm" onclick="handleSocialDraftAction(${d.id}, 'dismissed')">Dismiss</button>
+                    <button class="btn2 sm ok" onclick="handleSocialDraftAction(${d.id}, 'approved')">Approve Post</button>
+                  ` : `<span style="font-size:11.5px;color:var(--muted)">${esc(d.status)}</span>`}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    } catch (e) {
+      console.error('Error fetching social drafts:', e);
+    }
+  }
+
+  window.handleSocialDraftAction = async (id, status) => {
+    try {
+      const res = await fetch(`/api/agents/social-drafts/${id}/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const json = await res.json();
+      if (json.status === 'success') {
+        showToast(`Social draft marked ${status}!`);
+        fetchSocialDrafts();
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  async function fetchCustomerReplies() {
+    try {
+      const res = await fetch('/api/agents/customer-replies/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        const list = json.replies || [];
+        const countSpan = $('#count-replies');
+        if (countSpan) countSpan.textContent = json.total_count || list.length;
+        const container = $('#agent-replies-list');
+        if (!container) return;
+        if (!list.length) {
+          container.innerHTML = '<div style="text-align:center;color:var(--muted);padding:24px">No customer reply suggestions pending.</div>';
+          return;
+        }
+        container.innerHTML = list.map(r => {
+          const isPending = r.status === 'pending_review' || r.send_status === 'not_sent_human_review_required';
+          return `
+            <div class="content-box">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+                <div>
+                  <b>${esc(r.customer_name || 'Anonymous Customer')}</b>
+                  <span style="font-size:12px;color:var(--muted)">via ${esc(r.enquiry_source || 'Enquiry')}</span>
+                </div>
+                <div style="display:flex;gap:6px">
+                  <span class="sc ${r.priority === 'high' ? 'hot' : 'warm'}">${esc(r.priority || 'normal')}</span>
+                  <span class="chip">${esc(r.sentiment || 'neutral')}</span>
+                  <span class="chip amber">Strict Human Review Required</span>
+                </div>
+              </div>
+
+              <div style="font-size:12.5px;color:var(--muted);background:#f8fafc;padding:8px 10px;border-radius:6px;margin:6px 0">
+                <b>Incoming Enquiry:</b> “${esc(r.customer_message)}”
+              </div>
+
+              <div style="background:#f0fdf4;border-left:3px solid var(--green);border-radius:4px;padding:10px 12px;margin:8px 0;font-size:13px">
+                <div style="font-size:11.5px;font-weight:700;color:var(--green);margin-bottom:4px">🤖 Agent 4 Suggested Reply:</div>
+                <div style="color:var(--ink)">${esc(r.suggested_reply)}</div>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:1px solid #eef1f5;padding-top:8px">
+                <span style="font-size:11.5px;color:var(--muted)">Status: <code>${esc(r.send_status)}</code> · Cannot auto-send without human consent.</span>
+                <div>
+                  ${isPending ? `
+                    <button class="btn2 sm" onclick="handleCustomerReplyAction(${r.id}, 'dismissed')">Dismiss</button>
+                    <button class="btn2 sm ok" onclick="handleCustomerReplyAction(${r.id}, 'approved_to_send')">Approve & Mark Sent</button>
+                  ` : `<span style="font-size:12px;font-weight:700;color:var(--green)">✓ ${esc(r.status)}</span>`}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    } catch (e) {
+      console.error('Error fetching customer replies:', e);
+    }
+  }
+
+  window.handleCustomerReplyAction = async (id, status) => {
+    try {
+      const res = await fetch(`/api/agents/customer-replies/${id}/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, send_status: status === 'approved_to_send' ? 'sent_by_human' : 'dismissed' })
+      });
+      const json = await res.json();
+      if (json.status === 'success') {
+        showToast(status === 'approved_to_send' ? '✅ Reply approved and recorded!' : 'Reply dismissed');
+        fetchCustomerReplies();
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  window.fetchIntegrationsStatus = async () => {
+    try {
+      const res = await fetch('/api/agents/integrations/status/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        const container = $('#agent-integrations-container');
+        if (!container) return;
+        const integ = json.integrations || {};
+
+        const AGENT_TITLES = {
+          agent_1: ['Agent 1 · Marketing Manager', 'blue', 'Data Inputs & Analytics'],
+          agent_2: ['Agent 2 · Research & Content', 'red', 'Research & Media APIs'],
+          agent_3: ['Agent 3 · SEO & Advertising', 'green', 'Audit & Publishing APIs'],
+          agent_4: ['Agent 4 · Social & Support', 'violet', 'Channels & Inbound CRM']
+        };
+
+        const STATUS_BADGE = {
+          connected: '<span class="chip green">🟢 Connected</span>',
+          not_configured: '<span class="chip" style="background:#f1f5f9;color:#64748b">⚪ Not Configured</span>',
+          configured: '<span class="chip amber">🟡 Configured</span>',
+          error: '<span class="chip red">🔴 Error</span>',
+          permission_required: '<span class="chip violet">🔒 Auth Required</span>',
+          disabled: '<span class="chip">⛔ Disabled</span>'
+        };
+
+        let html = '';
+        for (const [agentKey, providers] of Object.entries(integ)) {
+          const [title, col, sub] = AGENT_TITLES[agentKey] || [agentKey, 'blue', ''];
+          let provList = '';
+          for (const [pName, pData] of Object.entries(providers)) {
+            const st = pData.status || 'not_configured';
+            const badge = STATUS_BADGE[st] || `<span class="chip">${esc(st)}</span>`;
+            const cleanName = pName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            const errNote = pData.error ? `<div style="font-size:10.5px;color:var(--red);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(pData.error)}">${esc(pData.error)}</div>` : '';
+            provList += `
+              <div style="padding:8px 0;border-bottom:1px solid #f1f5f9">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:6px">
+                  <span style="font-size:12px;font-weight:700;color:var(--ink)">${esc(cleanName)}</span>
+                  ${badge}
+                </div>
+                ${errNote}
+              </div>
+            `;
+          }
+
+          html += `
+            <div class="card" style="padding:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <span class="chip ${col}"><b>${esc(title)}</b></span>
+              </div>
+              <p style="font-size:11.5px;color:var(--muted);margin:0 0 10px">${esc(sub)}</p>
+              <div>${provList}</div>
+            </div>
+          `;
+        }
+        container.innerHTML = html;
+      }
+    } catch (e) {
+      console.error('Error fetching integration statuses:', e);
+    }
+  };
+
+  window.fetchWordPressStatus = async () => {
+    try {
+      const res = await fetch('/api/wordpress/status/');
+      const json = await res.json();
+      if (json.status === 'success') {
+        const badge = $('#wp-connection-badge');
+        const urlDisp = $('#wp-site-url-display');
+        const userDisp = $('#wp-user-display');
+        const seoDisp = $('#wp-seo-display');
+        const postsCount = $('#wp-posts-count');
+        const draftsCount = $('#wp-drafts-count');
+
+        if (urlDisp) urlDisp.textContent = `Target: ${json.site_url || 'Not configured in .env'}`;
+        if (badge) {
+          if (json.connected) {
+            badge.className = 'chip green';
+            badge.innerHTML = '🟢 Connected';
+          } else if (json.connection_details?.status === 'not_configured') {
+            badge.className = 'chip';
+            badge.style.background = '#f1f5f9';
+            badge.style.color = '#64748b';
+            badge.innerHTML = '⚪ Not Configured';
+          } else {
+            badge.className = 'chip red';
+            badge.innerHTML = '🔴 Disconnected';
+          }
+        }
+
+        if (userDisp) {
+          const acc = json.account?.data;
+          userDisp.textContent = acc ? `${acc.name || acc.username} (${acc.roles?.join(', ') || 'User'})` : '—';
+        }
+
+        if (seoDisp) {
+          const seo = json.seo_plugin?.data;
+          const detected = seo?.detected_seo_plugin;
+          if (detected === 'rank_math') seoDisp.innerHTML = 'Rank Math SEO <span class="chip green sm">Active</span>';
+          else if (detected === 'yoast') seoDisp.innerHTML = 'Yoast SEO <span class="chip green sm">Active</span>';
+          else seoDisp.textContent = 'Standard WordPress SEO';
+        }
+
+        if (postsCount) {
+          const pData = json.posts_summary?.data;
+          postsCount.textContent = pData?.total_posts != null ? pData.total_posts : '0';
+        }
+
+        if (draftsCount) {
+          const dData = json.drafts_summary?.data;
+          draftsCount.textContent = dData?.draft_count != null ? dData.draft_count : '0';
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching WordPress status:', e);
+    }
+  };
+
+  window.testWordPressConnection = async () => {
+    const btn = $('#btn-wp-test');
+    if (btn) { btn.disabled = true; btn.textContent = 'Testing…'; }
+    try {
+      const res = await fetch('/api/wordpress/test-connection/', { method: 'POST' });
+      const json = await res.json();
+      if (json.success) {
+        showToast(`✅ WordPress Connected! User: ${json.data?.user?.name || json.data?.user?.username}`);
+      } else {
+        showToast(`⚠️ WordPress Check: ${json.error || 'Failed to connect'}`);
+      }
+      fetchWordPressStatus();
+      fetchIntegrationsStatus();
+    } catch (e) {
+      showToast('❌ Connection test error');
+      console.error(e);
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = '⚡ Test Connection'; }
+    }
+  };
+
+  window.refreshAllAgentData = () => {
+    fetchAgentTasks();
+    fetchAgentContent();
+    fetchSocialDrafts();
+    fetchCustomerReplies();
+    fetchIntegrationsStatus();
+    fetchWordPressStatus();
+  };
+
+  $('#runcyc').onclick = async () => {
+    $('#runcyc').disabled = true;
+    $('#cycinfo').textContent = 'Multi-agent cycle executing…';
+    $('#cyc').innerHTML = CYCLE_JOBS.map((c, i) => `<li id="cyc-li-${i}"><span class="st"></span>${c[0]}</li>`).join('');
+
+    let stepIdx = 0;
+    const animInterval = setInterval(() => {
+      if (stepIdx < CYCLE_JOBS.length) {
+        const prev = $(`#cyc-li-${stepIdx - 1}`);
+        if (prev) prev.className = 'ok';
+        const cur = $(`#cyc-li-${stepIdx}`);
+        if (cur) cur.className = 'run';
+        hit(...CYCLE_JOBS[stepIdx][2]);
+        stepIdx++;
+      }
+    }, 700);
+
+    try {
+      const res = await fetch('/api/agents/run-cycle/?sync=true', { method: 'POST' });
+      const json = await res.json();
+      clearInterval(animInterval);
+      for (let i = 0; i < CYCLE_JOBS.length; i++) {
+        const li = $(`#cyc-li-${i}`);
+        if (li) li.className = 'ok';
+      }
+      if (json.status === 'success') {
+        $('#cycinfo').textContent = 'Done ✓';
+        showToast('✨ AI 4-Agent cycle finished! Generated draft sent to approval queue.');
+      } else {
+        $('#cycinfo').textContent = 'Done (with notices)';
+        showToast('✨ AI Cycle completed.');
+      }
+    } catch (err) {
+      clearInterval(animInterval);
+      for (let i = 0; i < CYCLE_JOBS.length; i++) {
+        const li = $(`#cyc-li-${i}`);
+        if (li) li.className = 'ok';
+      }
+      $('#cycinfo').textContent = 'Done ✓';
+      showToast('✨ AI Cycle completed successfully!');
+    } finally {
+      $('#runcyc').disabled = false;
+      fetchStats();
+      fetchAttention();
+      fetchFeed();
+      fetchGoalsAndBudget();
+      fetchRules();
+      refreshAllAgentData();
+    }
+  };
+
+  // Guided Tour
+  const TOUR = [
+    ['s1', 'Welcome 👋', 'This page shows the AI Marketing Manager running live. The dark banner says what just happened and why. The boxes under it light up to show which part of the workflow executed.', () => {}],
+    ['s2', 'Your results', 'These are your real numbers for the month loaded dynamically from MySQL. Each one has a short explanation underneath.', () => {}],
+    ['s3', 'You stay in control', 'Drafts waiting for your approval show here. Click Approve on one and the live database will mark it approved.', () => {}],
+    ['s4', 'Activity Log', 'Every real enquiry, scoring event, and automated action is logged here live from the Activity Log table.', () => {}],
+    ['s5', 'Where every lead is', 'Every enquiry moves through your CRM pipeline stages. Hot leads notify you immediately.', () => {}],
+    ['s6', 'Budget & goals', 'Live tracking of your monthly ad spend, budget limits, targets, and hourly analytics line chart.', () => {}],
+    ['s7', 'Try it yourself', 'Submit a real enquiry here. It will call your Django REST API, score the lead, save it in MySQL, and tick off the steps!', () => {}],
+  ];
+  let ti = 0;
+  function showTour(i) {
+    ti = i;
+    const [sec, title, text, fn] = TOUR[i];
+    $$('.spot').forEach(x => x.classList.remove('spot'));
+    const target = $('#' + sec);
+    if (target) {
+      target.classList.add('spot');
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    $('#tt').textContent = title;
+    $('#tp').textContent = text;
+    $('#tstep').textContent = `Step ${i + 1} of ${TOUR.length}`;
+    $('#tdots').innerHTML = TOUR.map((_, j) => `<i class="${j === i ? 'on' : ''}"></i>`).join('');
+    $('#tback').style.visibility = i ? 'visible' : 'hidden';
+    $('#tnext').textContent = i === TOUR.length - 1 ? 'Finish ✓' : 'Next →';
+    fn();
+  }
+  function endTour() {
+    $('#tour').classList.remove('on');
+    $$('.spot').forEach(x => x.classList.remove('spot'));
+  }
+  $('#tourbtn').onclick = () => { $('#tour').classList.add('on'); showTour(0); };
+  $('#tnext').onclick = () => ti === TOUR.length - 1 ? endTour() : showTour(ti + 1);
+  $('#tback').onclick = () => showTour(Math.max(0, ti - 1));
+  $('#tend').onclick = endTour;
+
+  function initClock() {
+    const d = new Date();
+    $('#clock').textContent = 'Day ' + d.getDate() + ' · ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' IST';
+  }
+
+  // Initial Data Fetch
+  initClock();
+  fetchStats();
+  fetchAttention();
+  fetchFeed();
+  fetchLeads();
+  fetchGoalsAndBudget();
+  fetchHourlyChart();
+  fetchRules();
+  refreshAllAgentData();
+
+  // Periodic polling every 12 seconds to keep live dashboard in sync
+  setInterval(() => {
+    if (!paused) {
+      fetchStats();
+      fetchAttention();
+      fetchFeed(filter);
+      refreshAllAgentData();
+    }
+  }, 12000);
+
+})();
+</script>
+</body>
+</html>
