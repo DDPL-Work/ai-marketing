@@ -66,6 +66,19 @@ const initialState = {
     { step: 'Send the form to see the full chain here.', status: 'info' }
   ],
   isSubmittingEnquiry: false,
+
+  // Live Dashboard Multi-Tab View
+  activeTab: 'overview', // 'overview' | 'attention' | 'activity' | 'leads' | 'budget' | 'simulator' | 'all'
+  isSidebarOpen: true,
+
+  // Logged-in user information
+  currentUser: {
+    name: 'Dr. Design Admin',
+    role: 'Administrator · CMO',
+    email: 'admin@drdesigntechnology.com',
+    initials: 'DD',
+    isLoggedIn: true,
+  },
 };
 
 const dashboardSlice = createSlice({
@@ -130,6 +143,21 @@ const dashboardSlice = createSlice({
       if (state.enquiryTrace[index]) {
         state.enquiryTrace[index].status = status;
       }
+    },
+    setActiveTab: (state, action) => {
+      state.activeTab = action.payload;
+    },
+    toggleSidebar: (state) => {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    },
+    setSidebarOpen: (state, action) => {
+      state.isSidebarOpen = action.payload;
+    },
+    logoutUser: (state) => {
+      state.currentUser.isLoggedIn = false;
+    },
+    loginUser: (state) => {
+      state.currentUser.isLoggedIn = true;
     },
   },
   extraReducers: (builder) => {
@@ -231,6 +259,11 @@ export const {
   resetCycleJobs,
   setEnquiryTrace,
   updateEnquiryTraceStep,
+  setActiveTab,
+  toggleSidebar,
+  setSidebarOpen,
+  logoutUser,
+  loginUser,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

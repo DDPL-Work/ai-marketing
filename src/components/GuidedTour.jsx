@@ -14,7 +14,9 @@ const TOUR = [
 
 export default function GuidedTour() {
   const dispatch = useDispatch();
-  const { isTourOpen, currentStep } = useSelector((state) => state.ui);
+  const { tour } = useSelector((state) => state.ui);
+  const isTourOpen = tour?.isOpen;
+  const currentStep = tour?.currentStep || 0;
 
   useEffect(() => {
     document.querySelectorAll('.spot').forEach((el) => el.classList.remove('spot'));
